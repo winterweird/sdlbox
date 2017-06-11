@@ -5,6 +5,7 @@
 #include <string>
 #include "Color.hpp"
 #include "Texture.hpp"
+#include "Font.hpp"
 
 namespace sdlbox {
     class Label : public Component {
@@ -24,6 +25,8 @@ namespace sdlbox {
             void draw() const override;
         private:
             Texture* texture;
+
+            void createTexture(Font* font, std::string text, Color color, bool blended);
     };
 }
 

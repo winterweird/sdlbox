@@ -5,27 +5,13 @@ using std::string;
 
 sdlbox::Label::Label(string text, bool blended) {
     Font* font = GraphicsHelper::getDefaultFont();
-    
-    if (blended) {
-        texture = font->renderBlended(text, Color(0,0,0));
-    }
-    else {
-        texture = font->render(text, Color(0,0,0));
-    }
-
+    createTexture(font, text, Color(0,0,0), blended);
     setPadding(2, 2);
 }
 
 sdlbox::Label::Label(string text, Color color, bool blended) {
     Font* font = GraphicsHelper::getDefaultFont();
-
-    if (blended) {
-        texture = font->renderBlended(text, color);
-    }
-    else {
-        texture = font->render(text, color);
-    }
-    
+    createTexture(font, text, color, blended);
     setPadding(2, 2);
 }
 
@@ -54,8 +40,16 @@ void sdlbox::Label::setPosition(Component* relative, int x, int y) {
     texture->setPosition(this, 0, 0);
 }
 
-
-
 void sdlbox::Label::draw() const {
     texture->draw();
+}
+
+// helper method
+void sdlbox::Label::createTexture(Font* font, string text, Color color, bool blended) {
+    if (blended) {
+        texture = font->renderBlended(text, color);
+    }
+    else {
+        texture = font->render(text, color);
+    }
 }
