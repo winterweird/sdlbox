@@ -27,13 +27,8 @@ void sdlbox::Texture::draw() const {
     r.h = getHeight();
     r.x = getX();
     r.y = getY();
-
-    using namespace std;
-    cout << "Rect: " << r.w << ", " << r.h << ", " << r.x << ", " << r.y << endl;
     
     SDL_Renderer* renderer = SDLBox::getInstance()->getRenderer();
-
-    cout << "Renderer: " << renderer << endl;
 
     SDL_RenderCopy(renderer, texture, NULL, &r);
 }

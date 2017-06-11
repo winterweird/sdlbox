@@ -15,7 +15,6 @@ sdlbox::SDLBox::SDLBox(string title, int width, int height) : width(width), heig
 
 sdlbox::SDLBox::~SDLBox() {
     // destroy all children
-    using namespace std;
     for (auto c : components) {
         delete c;
     }
@@ -32,13 +31,20 @@ void sdlbox::SDLBox::setOrientation(int orientation) {
 void sdlbox::SDLBox::add(Component* c) {
     components.push_back(c);
 
+    // short names:
+    int hPad = c->getHorizontalPadding();
+    int vPad = c->getVerticalPadding();
+
+    std::cout << "Hpad " << hPad << std::endl;
+    std::cout << "Vpad " << vPad << std::endl;
+    
     if (c->receivePosition()) {
-        c->setPosition(nextX, nextY);
+        c->setPosition(nextX + hPad, nextY + vPad);
         if (orientation == Layout::VERTICAL) {
-            nextY += c->getHeight();
+            nextY += c->getHeight() + 2*vPad;
         }
         else if (orientation == Layout::HORIZONTAL) {
-            nextX += c->getWidth();
+            nextX += c->getWidth() + 2*hPad;
         }
         // else: idk
     }
@@ -48,10 +54,10 @@ void sdlbox::SDLBox::add(Component* c) {
         int h = height;
         
         if (autoResizeWidth) {
-            w = max(c->getX() + c->getWidth(), w);
+            w = max(c->getX() + c->getWidth() + hPad, w);
         }
         if (autoResizeHeight) {
-            h = max(c->getY() + c->getHeight(), h);
+            h = max(c->getY() + c->getHeight() + vPad, h);
         }
 
         resize(w, h);
@@ -61,7 +67,6 @@ void sdlbox::SDLBox::add(Component* c) {
 void sdlbox::SDLBox::draw() const {
     SDL_RenderClear(renderer);
 
-    using namespace std;
     for (auto c : components) {
         c->draw();
     }

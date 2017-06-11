@@ -24,11 +24,10 @@ all: $(OUTFILE)
 $(OUTFILE): $(OUTSRCFILE) $(OBJFILES)
 	$(CC) $(CFLAGS) $< $(OBJFILES) $(LIBS) -o $@
 
-$(OBJDIR)%.o: $(SRCDIR)%.cpp
+$(OBJDIR)%.o: $(SRCDIR)%.cpp $(INCDIR)%.hpp
 	$(CC) $(CFLAGS) -c $< $(LIBS) -o $@
 
 clean:
 	rm obj/* bin/*
 
-init:
-	mkdir src bin include lib obj
+init:	mkdir src bin include lib obj

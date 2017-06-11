@@ -29,7 +29,7 @@ namespace sdlbox {
             virtual void draw() const = 0;
         private:
             int x, y;
-            int vPad, hPad;
+            int vPad = 0, hPad = 0;
     };
 }
 
