@@ -3,13 +3,16 @@
 
 #include <SDL2/SDL.h>
 #include "Texture.hpp"
+#include "Font.hpp"
 
 namespace sdlbox {
     // contains nifty little static helper methods
     class GraphicsHelper {
         public:
             static Texture* createTexture(SDL_Surface* surf, bool freesrc=true);
+            static Font* getDefaultFont(); // pointer because copying fonts is scary
         private:
+            static Font* defaultFont;
     };
 }
 

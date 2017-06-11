@@ -12,8 +12,8 @@ namespace sdlbox {
             virtual int getX() const;
             virtual int getY() const;
 
-            void setPosition(int x, int y);
-            void setPosition(Component* relative, int x, int y);
+            virtual void setPosition(int x, int y);
+            virtual void setPosition(Component* relative, int x, int y);
 
             // whether or not the specified component should receive its
             // position from its parent or not
