@@ -20,6 +20,27 @@ void sdlbox::Component::setPosition(Component* relative, int x, int y) {
     this->y = relative->getY() + y;
 }
 
+int sdlbox::Component::getVerticalPadding() const {
+    return vPad;
+}
+
+int sdlbox::Component::getHorizontalPadding() const {
+    return hPad;
+}
+
+void sdlbox::Component::setVerticalPadding(int amount) {
+    vPad = amount;
+}
+
+void sdlbox::Component::setHorizontalPadding(int amount) {
+    hPad = amount;
+}
+
+void sdlbox::Component::setPadding(int verticalPadding, int horizontalPadding) {
+    setVerticalPadding(verticalPadding);
+    setHorizontalPadding(horizontalPadding);
+}
+
 bool sdlbox::Component::receivePosition() const {
     return true;
 }

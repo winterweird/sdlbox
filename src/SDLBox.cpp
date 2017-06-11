@@ -17,9 +17,7 @@ sdlbox::SDLBox::~SDLBox() {
     // destroy all children
     using namespace std;
     for (auto c : components) {
-        cout << "Deleting component " << c << endl;
         delete c;
-        cout << "Component deleted" << endl;
     }
     
     SDL_DestroyRenderer(renderer);
@@ -65,9 +63,7 @@ void sdlbox::SDLBox::draw() const {
 
     using namespace std;
     for (auto c : components) {
-        cout << "ayy" << endl;
         c->draw();
-        cout << "eyy" << endl;
     }
 
     SDL_RenderPresent(renderer);
