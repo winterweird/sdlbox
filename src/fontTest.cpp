@@ -7,7 +7,7 @@ using namespace std;
 int main(int argc, char** argv) {
     SDLBox window("Title");
     
-    Font f("font.ttf", 20);
+    Font f("default.ttf", 20);
     auto text = f.render("Some text", Color(0xff, 0, 0));
     
     window.add(text);
