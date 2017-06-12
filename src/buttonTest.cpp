@@ -9,16 +9,17 @@ int main(int argc, char** argv) {
 
     window.setOrientation(Layout::HORIZONTAL);
 
-    class C : public Callback {
-        public:
-            void callback() override {
-                cout << "Why hello there!" << endl;
-            }
-    };
+    int i = 233;
     
     window.add(new Label("Here is some text to make sure stuff works"));
-    window.add((new Button("Button text", new C))->withHPad(20));
+    
+    auto callback = [&](const SDL_Event &e) {
+        cout << "Heyyyy " << i++ << endl;
+    };
+    window.add((new Button("Button text", callback))->withHPad(20));
+    
     window.add(new Label("And here is some more text"));
+    
     mainloop(&window);
 
     return 0;

@@ -1,6 +1,10 @@
 #include "Component.hpp"
 
-sdlbox::Component::~Component() {}
+sdlbox::Component::~Component() {
+    for (auto l : eventListeners) {
+        delete l.second;
+    }
+}
 
 int sdlbox::Component::getX() const {
     return x;
@@ -44,6 +48,16 @@ sdlbox::Component* sdlbox::Component::withPadding(int vPad, int hPad) {
     this->vPad = vPad;
     this->hPad = hPad;
     return this;
+}
+
+void sdlbox::Component::handle(const SDL_Event &e) {
+    auto l = eventListeners.find(e.type);
+    if (l != eventListeners.end())
+        (l->second)->handle(e);
+}
+
+void sdlbox::Component::addEventListener(int eventType, EventListener* l) {
+    eventListeners[eventType] = l;
 }
 
 bool sdlbox::Component::receivePosition() const {

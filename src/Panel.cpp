@@ -61,6 +61,7 @@ void sdlbox::Panel::draw() const {
 }
 
 void sdlbox::Panel::handle(const SDL_Event &e) {
+    Component::handle(e);
     for (auto c : components) {
         c->handle(e);
     }
@@ -81,4 +82,7 @@ void sdlbox::Panel::repositionChildren() {
             nx += c->getWidth() + 2*hPad;
         }
     }
+
+    nextX = nx;
+    nextY = ny;
 }

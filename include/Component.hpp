@@ -30,10 +30,14 @@ namespace sdlbox {
             
             virtual void draw() const = 0;
 
-            virtual void handle(const SDL_Event &e) = 0;
+            virtual void handle(const SDL_Event &e);
+            
+            void addEventListener(int eventType, EventListener* l);
         private:
             int x, y;
             int vPad = 0, hPad = 0;
+
+            std::map<int, EventListener*> eventListeners;
     };
 }
 

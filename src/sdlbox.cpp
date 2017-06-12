@@ -1,9 +1,10 @@
 #include "sdlbox.hpp"
 #include <thread>
+#include <atomic>
 
 void sdlbox::mainloop(sdlbox::SDLBox* window) {
     SDL_Event e;
-    bool running = true;
+    std::atomic<bool> running(true);
     
     std::thread t([&]() {
         while (running) {

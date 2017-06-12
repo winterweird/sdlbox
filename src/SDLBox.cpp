@@ -86,6 +86,41 @@ void sdlbox::SDLBox::handle(const SDL_Event &e) {
     }
 }
 
+void sdlbox::SDLBox::repositionChildren() {
+    int nx = 0;
+    int ny = 0;
+    int w = width;
+    int h = height;
+
+    for (size_t i = 0; i < components.size(); i++) {
+        auto c = components[i];
+        int hPad = c->getHorizontalPadding();
+        int vPad = c->getVerticalPadding();
+        c->withPosition(nx + hPad, ny + vPad);
+        if (orientation == Layout::VERTICAL) {
+            ny += c->getHeight() + 2*vPad;
+        }
+        else if (orientation == Layout::HORIZONTAL) {
+            nx += c->getWidth() + 2*hPad;
+        }
+
+        // calculate new required width/height
+        if (autoResizeWidth) {
+            tmp = max(c->getX() + c->getWidth() + hPad, w);
+        }
+        if (autoResizeHeight) {
+            h = max(c->getY() + c->getHeight() + vPad, h);
+        }
+    }
+    
+    if (autoResizeWidth || autoResizeHeight) {
+        resize(w, h);
+    }
+
+    nextX = nx;
+    nextY = ny;
+}
+
 sdlbox::SDLBox* sdlbox::SDLBox::getInstance() {
     if (instance == NULL) {
         throw runtime_error("Cannot get instance: no window has been created");

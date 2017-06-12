@@ -2,14 +2,16 @@
 #define INCLUDE_BUTTON_HPP_HEADER_GUARD_193223011420993
 
 #include "Component.hpp"
-#include "Callback.hpp"
 #include "Texture.hpp"
 #include <string>
+#include <functional>
 
 namespace sdlbox {
     class Button : public Component {
         public:
-            Button(std::string text, Callback* callback);
+            Button(std::string text, std::function<void (const SDL_Event&)> callback);
+            Button(std::string text, std::function<bool (const SDL_Event&)> match,
+                    std::function<void (const SDL_Event&)> callback);
             ~Button();
 
             int getWidth() const override;
@@ -19,10 +21,7 @@ namespace sdlbox {
             Component* withPosition(Component* relative, int x, int y) override;
             
             void draw() const override;
-
-            void handle(const SDL_Event &e) override;
         private:
-            Callback* c;
             Texture* texture;
     };
 }

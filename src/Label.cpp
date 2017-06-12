@@ -1,5 +1,6 @@
 #include "Label.hpp"
 #include "GraphicsHelper.hpp"
+#include "SDLBox.hpp"
 #include <iostream> // testing
 
 using std::string;
@@ -47,11 +48,27 @@ sdlbox::Component* sdlbox::Label::withPosition(Component* relative, int x, int y
     return this;
 }
 
+void sdlbox::Label::setText(string text, bool blended) {
+    auto font = GraphicsHelper::getDefaultFont();
+    createTexture(font, text, Color(0,0,0), blended);
+}
+
+void sdlbox::Label::setText(Font* font, string text, bool blended) {
+    createTexture(font, text, Color(0,0,0), blended);
+}
+
+void sdlbox::Label::setText(string text, Color color, bool blended) {
+    auto font = GraphicsHelper::getDefaultFont();
+    createTexture(font, text, color, blended);
+}
+
+void sdlbox::Label::setText(Font* font, string text, Color color, bool blended) {
+    createTexture(font, text, color, blended);
+}
+
 void sdlbox::Label::draw() const {
     texture->draw();
 }
-
-void sdlbox::Label::handle(const SDL_Event &e) { /*do nothing*/ }
 
 // helper method
 void sdlbox::Label::createTexture(Font* font, string text, Color color, bool blended) {
@@ -61,4 +78,6 @@ void sdlbox::Label::createTexture(Font* font, string text, Color color, bool ble
     else {
         texture = font->render(text, color);
     }
+
+    //SDLBox::getInstance()->repositionChildren(); // update display // actually, don't
 }

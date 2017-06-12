@@ -23,8 +23,12 @@ namespace sdlbox {
             Component* withPosition(int x, int y) override;
             Component* withPosition(Component* relative, int x, int y) override;
 
+            void setText(std::string text, bool blended=false);
+            void setText(Font* font, std::string text, bool blended=false);
+            void setText(std::string text, Color color, bool blended=false);
+            void setText(Font* font, std::string text, Color color, bool blended=false);
+            
             void draw() const override;
-            void handle(const SDL_Event &e) override;
         private:
             Texture* texture;
 

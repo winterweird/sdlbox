@@ -1,13 +1,19 @@
 #include "Button.hpp"
 #include "GraphicsHelper.hpp"
+#include "EventListener.hpp"
 
-sdlbox::Button::Button(std::string text, Callback* callback) : c(callback) {
+sdlbox::Button::Button(std::string text, std::function<void (const SDL_Event&)> callback) {
     Font* font = GraphicsHelper::getDefaultFont();
     texture = font->render(text, Color(0,0,0));
+    
+    addEventListener(SDL_MOUSEBUTTONDOWN, new EventListener([this](const SDL_Event& e) {
+        return e.button.button == SDL_BUTTON_LEFT
+            && e.button.x >= getX() && e.button.x <= getX() + getWidth()
+            && e.button.y >= getY() && e.button.y <= getY() + getHeight();
+    }, callback));
 }
 
 sdlbox::Button::~Button() {
-    delete c;
     delete texture;
 }
 
@@ -40,15 +46,4 @@ sdlbox::Component* sdlbox::Button::withPosition(Component* relative, int x, int 
     Component::withPosition(relative, x, y);
     texture->withPosition(this, getHeight()/4, getHeight()/4);
     return this;
-}
-
-void sdlbox::Button::handle(const SDL_Event &e) {
-    if (e.type == SDL_MOUSEBUTTONDOWN) {
-        if (e.button.x >= getX() && e.button.x <= getX() + getWidth()) {
-            if (e.button.y >= getY() && e.button.y <= getY() + getHeight()) {
-                // collision
-                c->callback();
-            }
-        }
-    }
 }
