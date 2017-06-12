@@ -1,32 +1,36 @@
 #include "sdlbox.hpp"
 #include <iostream>
-#include <atomic>
-#include <mutex>
 
 using namespace sdlbox;
 using namespace std;
 
-std::mutex mtx;
+auto always = [](const SDL_Event &e) {
+    return true;
+};
+
+auto never = [](const SDL_Event &e) {
+    return false;
+};
 
 int main(int argc, char** argv) {
     SDLBox window("Sample program 101");
 
-    atomic<int> i(0);
+    int i = 0;
+    
+    Panel* counterPane = new Panel(Layout::HORIZONTAL);
+    counterPane->add(new Label("Counter:"));
+    Label* c = static_cast<Label*>((new Label(to_string(i)))->withRPad(40));
+    counterPane->add(c);
 
-    Label* l = new Label("Counter: " + to_string(i));
-    window.add(l);
-
+    window.add(counterPane);
+    
     auto incr = [&](const SDL_Event &e) {
-        i++;
-        cout << "incr" << i << endl;
-        l->setText("Counter: ");
+        c->setText(to_string(++i));
     };
     window.add(new Button("Increment", incr));
 
-    auto decr = [&](const SDL_Event &e) {
-        i--;
-        cout << "decr" << i << endl;
-        l->setText("Counter: ");
+   auto decr = [&](const SDL_Event &e) {
+        c->setText(to_string(--i));
     };
     window.add(new Button("Decrement", decr));
 

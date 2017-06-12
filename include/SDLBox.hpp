@@ -14,11 +14,22 @@ namespace sdlbox {
             ~SDLBox();
 
             void setOrientation(int orientation);
+            void setFPS(int fps);
+            
+            // freeze size
+            void freezeSize();
+            void freezeWidth();
+            void freezeHeight();
+            
+            int getFPS() const;
+            
             void add(Component* c);
 
             void draw() const;
 
             void handle(const SDL_Event & e);
+
+            void repositionChildren();
 
             static SDLBox* getInstance();
             SDL_Renderer* getRenderer() const;
@@ -28,9 +39,10 @@ namespace sdlbox {
             int nextY = 0;
             bool autoResizeWidth, autoResizeHeight;
             int orientation = Layout::VERTICAL;
+            int FPS = 60;
             
-            SDL_Window* window;
-            SDL_Renderer* renderer;
+            SDL_Window* window = NULL;
+            SDL_Renderer* renderer = NULL;
 
             static SDLBox* instance;
 

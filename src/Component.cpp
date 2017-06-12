@@ -1,5 +1,7 @@
 #include "Component.hpp"
 
+std::mutex sdlbox::mtx;
+
 sdlbox::Component::~Component() {
     for (auto l : eventListeners) {
         delete l.second;
@@ -27,27 +29,67 @@ sdlbox::Component* sdlbox::Component::withPosition(Component* relative, int x, i
 }
 
 int sdlbox::Component::getVerticalPadding() const {
-    return vPad;
+    return getTopPadding() + getBottomPadding(); // fix
 }
 
 int sdlbox::Component::getHorizontalPadding() const {
-    return hPad;
+    return getLeftPadding() + getRightPadding();
+}
+
+int sdlbox::Component::getLeftPadding() const {
+    return lPad;
+}
+
+int sdlbox::Component::getRightPadding() const {
+    return rPad;
+}
+
+int sdlbox::Component::getTopPadding() const {
+    return tPad;
+}
+
+int sdlbox::Component::getBottomPadding() const {
+    return bPad;
+}
+
+void sdlbox::Component::getPadding(int &l, int &r, int &t, int &b) const {
+    l = lPad; r = rPad; t = tPad; b = bPad;
 }
 
 sdlbox::Component* sdlbox::Component::withVPad(int amount) {
-    vPad = amount;
-    return this;
+    return withTPad(amount)->withBPad(amount);
 }
 
 sdlbox::Component* sdlbox::Component::withHPad(int amount) {
-    hPad = amount;
+    return withLPad(amount)->withRPad(amount);
+}
+
+sdlbox::Component* sdlbox::Component::withLPad(int amount) {
+    lPad = amount;
+    return this;
+}
+
+sdlbox::Component* sdlbox::Component::withRPad(int amount) {
+    rPad = amount;
+    return this;
+}
+
+sdlbox::Component* sdlbox::Component::withTPad(int amount) {
+    tPad = amount;
+    return this;
+}
+
+sdlbox::Component* sdlbox::Component::withBPad(int amount) {
+    bPad = amount;
     return this;
 }
 
 sdlbox::Component* sdlbox::Component::withPadding(int vPad, int hPad) {
-    this->vPad = vPad;
-    this->hPad = hPad;
-    return this;
+    return withVPad(vPad)->withHPad(hPad);
+}
+
+sdlbox::Component* sdlbox::Component::withPadding(int lPad, int rPad, int tPad, int bPad) {
+    return withLPad(lPad)->withRPad(rPad)->withTPad(tPad)->withBPad(bPad);
 }
 
 void sdlbox::Component::handle(const SDL_Event &e) {

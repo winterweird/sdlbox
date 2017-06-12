@@ -21,7 +21,7 @@ namespace sdlbox {
 
             void getTextDimensions(std::string text, int& width, int& height) const;
         private:
-            TTF_Font* font;
+            TTF_Font* font = NULL;
     };
 }
 

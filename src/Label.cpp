@@ -5,19 +5,19 @@
 
 using std::string;
 
-sdlbox::Label::Label(string text, bool blended) {
+sdlbox::Label::Label(string text, bool blended) : texture(NULL) {
     Font* font = GraphicsHelper::getDefaultFont();
     createTexture(font, text, Color(0,0,0), blended);
     withPadding(2, 2);
 }
 
-sdlbox::Label::Label(string text, Color color, bool blended) {
+sdlbox::Label::Label(string text, Color color, bool blended) : texture(NULL) {
     Font* font = GraphicsHelper::getDefaultFont();
     createTexture(font, text, color, blended);
     withPadding(2, 2);
 }
 
-sdlbox::Label::Label(string text, Color fgColor, Color bgColor) {
+sdlbox::Label::Label(string text, Color fgColor, Color bgColor) : texture(NULL) {
     Font* font = GraphicsHelper::getDefaultFont();
     texture = font->renderShaded(text, fgColor, bgColor);
     
@@ -72,12 +72,17 @@ void sdlbox::Label::draw() const {
 
 // helper method
 void sdlbox::Label::createTexture(Font* font, string text, Color color, bool blended) {
+    if (texture != NULL) {
+        delete texture;
+    }
+    //mtx.lock();
     if (blended) {
         texture = font->renderBlended(text, color);
     }
     else {
         texture = font->render(text, color);
     }
+    //mtx.unlock();
 
-    //SDLBox::getInstance()->repositionChildren(); // update display // actually, don't
+    SDLBox::getInstance()->repositionChildren(); // update display // actually, don't
 }

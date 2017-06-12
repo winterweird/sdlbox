@@ -2,8 +2,16 @@
 #define INCLUDE_COMPONENT_HPP_HEADER_GUARD_258033191213708
 
 #include <SDL2/SDL.h>
+#include <map>
+#include <mutex>
+#include <condition_variable>
+#include "EventListener.hpp"
 
 namespace sdlbox {
+    extern std::mutex mtx;
+    extern std::condition_variable cv;
+    extern bool isDrawing;
+    
     class Component {
         public:
             virtual ~Component();
@@ -19,10 +27,21 @@ namespace sdlbox {
 
             virtual int getVerticalPadding() const;
             virtual int getHorizontalPadding() const;
+            virtual int getLeftPadding() const;
+            virtual int getRightPadding() const;
+            virtual int getTopPadding() const;
+            virtual int getBottomPadding() const;
+            virtual void getPadding(int &lPad, int &rPad, int &tPad, int &bPad) const;
 
-            virtual Component* withVPad(int amount);
-            virtual Component* withHPad(int amount);
+            // add padding
+            virtual Component* withVPad(int amount); // vertical (top + bottom)
+            virtual Component* withHPad(int amount); // horizontal (left + right)
+            virtual Component* withLPad(int amount); // left
+            virtual Component* withRPad(int amount); // right
+            virtual Component* withTPad(int amount); // top
+            virtual Component* withBPad(int amount); // bottom
             virtual Component* withPadding(int vPad, int hPad);
+            virtual Component* withPadding(int lPad, int rPad, int tPad, int bPad);
 
             // whether or not the specified component should receive its
             // position from its parent or not
@@ -35,7 +54,7 @@ namespace sdlbox {
             void addEventListener(int eventType, EventListener* l);
         private:
             int x, y;
-            int vPad = 0, hPad = 0;
+            int rPad = 0, lPad = 0, tPad = 0, bPad = 0;
 
             std::map<int, EventListener*> eventListeners;
     };

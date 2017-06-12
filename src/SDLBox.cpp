@@ -3,6 +3,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <algorithm> // std::max
+#include <mutex>
 
 using std::string;
 using std::runtime_error;
@@ -31,26 +32,51 @@ sdlbox::SDLBox::~SDLBox() {
 }
 
 void sdlbox::SDLBox::setOrientation(int orientation) {
+    if (orientation != Layout::HORIZONTAL && orientation != Layout::VERTICAL) {
+        throw runtime_error("Illegal orientation: " + std::to_string(orientation));
+    }
+    
     this->orientation = orientation;
 }
 
+void sdlbox::SDLBox::setFPS(int fps) {
+    if (fps < 1) {
+        throw runtime_error("FPS must be a positive number");
+    }
+
+    this->FPS = fps;
+}
+
+void sdlbox::SDLBox::freezeSize() {
+    freezeWidth();
+    freezeHeight();
+}
+
+void sdlbox::SDLBox::freezeWidth() {
+    autoResizeWidth = false;
+}
+
+void sdlbox::SDLBox::freezeHeight() {
+    autoResizeHeight = false;
+}
+
+int sdlbox::SDLBox::getFPS() const {
+    return FPS;
+}
+
+
 void sdlbox::SDLBox::add(Component* c) {
-    components.push_back(c);
-
     // short names:
-    int hPad = c->getHorizontalPadding();
-    int vPad = c->getVerticalPadding();
-
-    std::cout << "Hpad " << hPad << std::endl;
-    std::cout << "Vpad " << vPad << std::endl;
+    int lPad, rPad, tPad, bPad;
+    c->getPadding(lPad, rPad, tPad, bPad);
     
     if (c->receivePosition()) {
-        c->withPosition(nextX + hPad, nextY + vPad);
+        c->withPosition(nextX + lPad, nextY + tPad);
         if (orientation == Layout::VERTICAL) {
-            nextY += c->getHeight() + 2*vPad;
+            nextY += c->getHeight() + tPad + bPad;
         }
         else if (orientation == Layout::HORIZONTAL) {
-            nextX += c->getWidth() + 2*hPad;
+            nextX += c->getWidth() + lPad + rPad;
         }
         // else: idk
     }
@@ -60,14 +86,16 @@ void sdlbox::SDLBox::add(Component* c) {
         int h = height;
         
         if (autoResizeWidth) {
-            w = max(c->getX() + c->getWidth() + hPad, w);
+            w = max(c->getX() + c->getWidth() + rPad, w);
         }
         if (autoResizeHeight) {
-            h = max(c->getY() + c->getHeight() + vPad, h);
+            h = max(c->getY() + c->getHeight() + bPad, h);
         }
 
         resize(w, h);
     }
+    
+    components.push_back(c);
 }
 
 void sdlbox::SDLBox::draw() const {
@@ -89,27 +117,30 @@ void sdlbox::SDLBox::handle(const SDL_Event &e) {
 void sdlbox::SDLBox::repositionChildren() {
     int nx = 0;
     int ny = 0;
-    int w = width;
-    int h = height;
+    int w = 1;
+    int h = 1;
 
     for (size_t i = 0; i < components.size(); i++) {
         auto c = components[i];
-        int hPad = c->getHorizontalPadding();
-        int vPad = c->getVerticalPadding();
-        c->withPosition(nx + hPad, ny + vPad);
+        
+        int lPad, rPad, tPad, bPad;
+        c->getPadding(lPad, rPad, tPad, bPad);
+        
+        c->withPosition(nx + lPad, ny + tPad);
+        
         if (orientation == Layout::VERTICAL) {
-            ny += c->getHeight() + 2*vPad;
+            ny += c->getHeight() + tPad + bPad;
         }
         else if (orientation == Layout::HORIZONTAL) {
-            nx += c->getWidth() + 2*hPad;
+            nx += c->getWidth() + lPad + rPad;
         }
 
         // calculate new required width/height
         if (autoResizeWidth) {
-            tmp = max(c->getX() + c->getWidth() + hPad, w);
+            w = max(c->getX() + c->getWidth() + rPad, w);
         }
         if (autoResizeHeight) {
-            h = max(c->getY() + c->getHeight() + vPad, h);
+            h = max(c->getY() + c->getHeight() + bPad, h);
         }
     }
     

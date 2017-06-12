@@ -5,7 +5,7 @@
 
 using std::max;
 
-sdlbox::Panel::Panel(int orientation) : orientation(orientation) {}
+sdlbox::Panel::Panel(int orientation) : orientation(orientation) { }
 
 sdlbox::Panel::~Panel() {
     for (auto c : components) {
@@ -16,22 +16,23 @@ sdlbox::Panel::~Panel() {
 void sdlbox::Panel::add(Component* c) {
     // TODO: Check how SDLBox handles this, I should probably model Panel at
     // least partly on that
-    components.push_back(c);
-
-    int vPad = c->getVerticalPadding();
-    int hPad = c->getHorizontalPadding();
-
-    c->withPosition(this, nextX + hPad, nextY + vPad);
     
-    width = max(nextX + c->getWidth() + 2*hPad, width);
-    height = max(nextY + c->getHeight() + 2*vPad, height);
+    int lPad, rPad, tPad, bPad;
+    c->getPadding(lPad, rPad, tPad, bPad);
+    
+    c->withPosition(this, nextX + lPad, nextY + tPad);
+    
+    width = max(nextX + c->getWidth() + lPad + rPad, width);
+    height = max(nextY + c->getHeight() + tPad + bPad, height);
 
     if (orientation == Layout::VERTICAL) {
-        nextY += c->getHeight() + 2*vPad;
+        nextY += c->getHeight() + tPad + bPad;
     }
     else if (orientation == Layout::HORIZONTAL) {
-        nextX += c->getWidth() + 2*hPad;
+        nextX += c->getWidth() + lPad + rPad;
     }
+    
+    components.push_back(c);
 }
 
 int sdlbox::Panel::getWidth() const {
@@ -72,14 +73,15 @@ void sdlbox::Panel::repositionChildren() {
     int ny = 0;
     for (size_t i = 0; i < components.size(); i++) {
         auto c = components[i];
-        int vPad = c->getVerticalPadding();
-        int hPad = c->getHorizontalPadding();
-        c->withPosition(this, nx + hPad, ny + vPad);
+
+        int lPad, rPad, tPad, bPad;
+        c->getPadding(lPad, rPad, tPad, bPad);
+        c->withPosition(this, nx + lPad, ny + tPad);
         if (orientation == Layout::VERTICAL) {
-            ny += c->getHeight() + 2*vPad;
+            ny += c->getHeight() + tPad + bPad;
         }
         else if (orientation == Layout::HORIZONTAL) {
-            nx += c->getWidth() + 2*hPad;
+            nx += c->getWidth() + lPad + rPad;
         }
     }
 

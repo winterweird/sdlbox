@@ -8,9 +8,17 @@ sdlbox::Button::Button(std::string text, std::function<void (const SDL_Event&)> 
     
     addEventListener(SDL_MOUSEBUTTONDOWN, new EventListener([this](const SDL_Event& e) {
         return e.button.button == SDL_BUTTON_LEFT
-            && e.button.x >= getX() && e.button.x <= getX() + getWidth()
-            && e.button.y >= getY() && e.button.y <= getY() + getHeight();
+            && e.button.x > getX() && e.button.x < getX() + getWidth()
+            && e.button.y > getY() && e.button.y < getY() + getHeight();
     }, callback));
+}
+
+sdlbox::Button::Button(std::string text, std::function<bool (const SDL_Event&)> match,
+        std::function<void (const SDL_Event&)> callback) {
+    Font* font = GraphicsHelper::getDefaultFont();
+    texture = font->render(text, Color(0,0,0));
+    
+    addEventListener(SDL_MOUSEBUTTONDOWN, new EventListener(match, callback));
 }
 
 sdlbox::Button::~Button() {

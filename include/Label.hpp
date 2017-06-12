@@ -30,7 +30,7 @@ namespace sdlbox {
             
             void draw() const override;
         private:
-            Texture* texture;
+            Texture* texture = NULL;
 
             void createTexture(Font* font, std::string text, Color color, bool blended);
     };

@@ -16,7 +16,7 @@ namespace sdlbox {
             void draw() const override;
         private:
             int width, height;
-            SDL_Texture* texture;
+            SDL_Texture* texture = NULL;
     };
 }
 

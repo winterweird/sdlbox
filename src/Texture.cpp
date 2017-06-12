@@ -23,11 +23,11 @@ int sdlbox::Texture::getHeight() const {
 
 void sdlbox::Texture::draw() const {
     SDL_Rect r;
-    r.w = getWidth();
-    r.h = getHeight();
-    r.x = getX();
-    r.y = getY();
-    
+    r.w = this->getWidth();
+    r.h = this->getHeight();
+    r.x = this->getX();
+    r.y = this->getY();
+
     SDL_Renderer* renderer = SDLBox::getInstance()->getRenderer();
 
     SDL_RenderCopy(renderer, texture, NULL, &r);

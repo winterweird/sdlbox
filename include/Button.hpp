@@ -22,7 +22,7 @@ namespace sdlbox {
             
             void draw() const override;
         private:
-            Texture* texture;
+            Texture* texture = NULL;
     };
 }
 
