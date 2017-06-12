@@ -13,14 +13,15 @@ namespace sdlbox {
             Label(std::string text, bool blended=false); // creates black text
             Label(std::string text, Color color, bool blended=false);
             Label(std::string text, Color fgColor, Color bgColor); // shaded text
+            ~Label();
 
             int getWidth() const override;
             int getHeight() const override;
 
             // custom setPosition methods which also sets the position of the
             // underlying Texture
-            void setPosition(int x, int y) override;
-            void setPosition(Component* relative, int x, int y) override;
+            Component* withPosition(int x, int y) override;
+            Component* withPosition(Component* relative, int x, int y) override;
 
             void draw() const override;
         private:

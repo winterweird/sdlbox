@@ -12,15 +12,15 @@ namespace sdlbox {
             virtual int getX() const;
             virtual int getY() const;
 
-            virtual void setPosition(int x, int y);
-            virtual void setPosition(Component* relative, int x, int y);
+            virtual Component* withPosition(int x, int y);
+            virtual Component* withPosition(Component* relative, int x, int y);
 
             virtual int getVerticalPadding() const;
             virtual int getHorizontalPadding() const;
 
-            virtual void setVerticalPadding(int amount);
-            virtual void setHorizontalPadding(int amount);
-            virtual void setPadding(int verticalPadding, int horizontalPadding);
+            virtual Component* withVPad(int amount);
+            virtual Component* withHPad(int amount);
+            virtual Component* withPadding(int vPad, int hPad);
 
             // whether or not the specified component should receive its
             // position from its parent or not

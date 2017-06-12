@@ -1,4 +1,5 @@
 #include "SDLBox.hpp"
+#include "GraphicsHelper.hpp"
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <algorithm> // std::max
@@ -18,7 +19,12 @@ sdlbox::SDLBox::~SDLBox() {
     for (auto c : components) {
         delete c;
     }
+
+    // delete default font
+    Font* f = GraphicsHelper::getDefaultFont();
+    delete f;
     
+    TTF_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
@@ -39,7 +45,7 @@ void sdlbox::SDLBox::add(Component* c) {
     std::cout << "Vpad " << vPad << std::endl;
     
     if (c->receivePosition()) {
-        c->setPosition(nextX + hPad, nextY + vPad);
+        c->withPosition(nextX + hPad, nextY + vPad);
         if (orientation == Layout::VERTICAL) {
             nextY += c->getHeight() + 2*vPad;
         }

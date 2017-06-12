@@ -10,14 +10,16 @@ int sdlbox::Component::getY() const {
     return y;
 }
 
-void sdlbox::Component::setPosition(int x, int y) {
+sdlbox::Component* sdlbox::Component::withPosition(int x, int y) {
     this->x = x;
     this->y = y;
+    return this;
 }
 
-void sdlbox::Component::setPosition(Component* relative, int x, int y) {
+sdlbox::Component* sdlbox::Component::withPosition(Component* relative, int x, int y) {
     this->x = relative->getX() + x;
     this->y = relative->getY() + y;
+    return this;
 }
 
 int sdlbox::Component::getVerticalPadding() const {
@@ -28,17 +30,20 @@ int sdlbox::Component::getHorizontalPadding() const {
     return hPad;
 }
 
-void sdlbox::Component::setVerticalPadding(int amount) {
+sdlbox::Component* sdlbox::Component::withVPad(int amount) {
     vPad = amount;
+    return this;
 }
 
-void sdlbox::Component::setHorizontalPadding(int amount) {
+sdlbox::Component* sdlbox::Component::withHPad(int amount) {
     hPad = amount;
+    return this;
 }
 
-void sdlbox::Component::setPadding(int verticalPadding, int horizontalPadding) {
-    setVerticalPadding(verticalPadding);
-    setHorizontalPadding(horizontalPadding);
+sdlbox::Component* sdlbox::Component::withPadding(int vPad, int hPad) {
+    this->vPad = vPad;
+    this->hPad = hPad;
+    return this;
 }
 
 bool sdlbox::Component::receivePosition() const {

@@ -11,9 +11,9 @@ OBJDIR = obj/
 LIBDIR = lib/
 
 OUTFILE = $(BINDIR)main
-OUTSRCFILE = $(SRCDIR)labelTest.cpp
+OUTSRCFILE = $(SRCDIR)panelTest.cpp
 
-OBJFILES_NODIR = sdlbox SDLBox Font Color GraphicsHelper Label Texture Component
+OBJFILES_NODIR = sdlbox SDLBox Font Color GraphicsHelper Label Texture Component Panel
 
 OBJFILES = $(addprefix $(OBJDIR),$(OBJFILES_NODIR:=.o))
 
