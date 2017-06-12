@@ -80,6 +80,12 @@ void sdlbox::SDLBox::draw() const {
     SDL_RenderPresent(renderer);
 }
 
+void sdlbox::SDLBox::handle(const SDL_Event &e) {
+    for (auto c : components) {
+        c->handle(e);
+    }
+}
+
 sdlbox::SDLBox* sdlbox::SDLBox::getInstance() {
     if (instance == NULL) {
         throw runtime_error("Cannot get instance: no window has been created");

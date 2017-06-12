@@ -19,6 +19,8 @@ namespace sdlbox {
             Component* withPosition(Component* relative, int x, int y) override;
             
             void draw() const override;
+
+            void handle(const SDL_Event &e) override;
         private:
             std::vector<Component*> components;
             int width, height;

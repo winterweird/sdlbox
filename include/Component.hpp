@@ -1,6 +1,8 @@
 #ifndef INCLUDE_COMPONENT_HPP_HEADER_GUARD_258033191213708
 #define INCLUDE_COMPONENT_HPP_HEADER_GUARD_258033191213708
 
+#include <SDL2/SDL.h>
+
 namespace sdlbox {
     class Component {
         public:
@@ -27,6 +29,8 @@ namespace sdlbox {
             virtual bool receivePosition() const;
             
             virtual void draw() const = 0;
+
+            virtual void handle(const SDL_Event &e) = 0;
         private:
             int x, y;
             int vPad = 0, hPad = 0;

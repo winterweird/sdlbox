@@ -18,6 +18,8 @@ namespace sdlbox {
 
             void draw() const;
 
+            void handle(const SDL_Event & e);
+
             static SDLBox* getInstance();
             SDL_Renderer* getRenderer() const;
         private:

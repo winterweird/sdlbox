@@ -60,6 +60,12 @@ void sdlbox::Panel::draw() const {
     }
 }
 
+void sdlbox::Panel::handle(const SDL_Event &e) {
+    for (auto c : components) {
+        c->handle(e);
+    }
+}
+
 void sdlbox::Panel::repositionChildren() {
     int nx = 0;
     int ny = 0;

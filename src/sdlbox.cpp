@@ -16,7 +16,9 @@ void sdlbox::mainloop(sdlbox::SDLBox* window) {
             if (e.type == SDL_QUIT) {
                 running = false;
             }
-        // else: find out what to do
+            else {
+                window->handle(e);
+            }
         }
     }
 

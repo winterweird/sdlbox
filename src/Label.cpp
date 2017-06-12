@@ -51,6 +51,8 @@ void sdlbox::Label::draw() const {
     texture->draw();
 }
 
+void sdlbox::Label::handle(const SDL_Event &e) { /*do nothing*/ }
+
 // helper method
 void sdlbox::Label::createTexture(Font* font, string text, Color color, bool blended) {
     if (blended) {

@@ -3,10 +3,13 @@
 
 #include "SDLBox.hpp"
 #include "Button.hpp"
+#include "Callback.hpp"
 #include "Label.hpp"
 #include "Layout.hpp"
 #include "Panel.hpp"
 #include "Font.hpp"
+#include "Color.hpp"
+#include "GraphicsHelper.hpp"
 
 namespace sdlbox {
     void mainloop(SDLBox* window);
