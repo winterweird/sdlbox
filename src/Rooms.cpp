@@ -2,6 +2,8 @@
 
 using std::runtime_error;
 
+std::map<std::string, int> sdlbox::Rooms::rooms;
+
 void sdlbox::Rooms::addRoom(const std::string &roomName) {
     if (rooms.find(roomName) != rooms.end())
         throw runtime_error("Error adding room: room " + roomName + " already exists");
