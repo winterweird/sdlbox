@@ -9,7 +9,8 @@ namespace sdlbox {
     
     class Room {
         public:
-            Room(std::string roomName);
+            Room(); // empty constructor
+            Room(const std::string &roomName);
             bool operator==(const std::string &roomName);
             bool operator==(const Room &other);
             friend class Rooms;

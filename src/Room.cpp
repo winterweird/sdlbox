@@ -3,7 +3,11 @@
 
 int sdlbox::Room::class_id = 0;
 
-sdlbox::Room::Room(std::string roomName) {
+sdlbox::Room::Room() {
+    id = -1; // should never be confused with a legitimate room
+}
+
+sdlbox::Room::Room(const std::string &roomName) {
     Room r = Rooms::getRoom(roomName);
     this->id = r.id;
 }

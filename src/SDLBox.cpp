@@ -153,6 +153,10 @@ int sdlbox::SDLBox::randint(int min, int max) const {
     return randint(max-min) + min;
 }
 
+void sdlbox::SDLBox::goToRoom(const Room &room) {
+    activeRoom = room;
+}
+
 void sdlbox::SDLBox::add(Component* c) {
     // short names:
     int lPad, rPad, tPad, bPad;

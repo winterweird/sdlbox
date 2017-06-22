@@ -15,7 +15,7 @@ SDLBOX_LIB = libsdlbox.a
 OUTFILE = $(BINDIR)main
 OUTSRCFILE = $(SRCDIR)flappyBirdTestGame.cpp
 
-OBJFILES_NODIR = sdlbox SDLBox Font Color GraphicsHelper Label Texture Component Panel Button EventListener TextureComponent UserEvents Textual VolatileLabel
+OBJFILES_NODIR = sdlbox SDLBox Font Color GraphicsHelper Label Texture Component Panel Button EventListener TextureComponent UserEvents Textual VolatileLabel Room Rooms
 
 OBJFILES = $(addprefix $(OBJDIR),$(OBJFILES_NODIR:=.o))
 

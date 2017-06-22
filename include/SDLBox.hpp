@@ -66,6 +66,8 @@ namespace sdlbox {
             bool autoResizeWidth, autoResizeHeight;
             int orientation = Layout::VERTICAL;
             int FPS = 60;
+
+            Room activeRoom;
             
             SDL_Window* window = NULL;
             SDL_Renderer* renderer = NULL;
