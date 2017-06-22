@@ -3,16 +3,16 @@
 
 #include "Component.hpp"
 #include "Texture.hpp"
+#include "Label.hpp"
 #include <string>
 #include <functional>
 
 namespace sdlbox {
-    class Button : public Component {
+    class Button : public Label {
         public:
             Button(std::string text, std::function<void (const SDL_Event&)> callback);
             Button(std::string text, std::function<bool (const SDL_Event&)> match,
                     std::function<void (const SDL_Event&)> callback);
-            ~Button();
 
             int getWidth() const override;
             int getHeight() const override;
@@ -22,7 +22,6 @@ namespace sdlbox {
             
             void draw() const override;
         private:
-            Texture* texture = NULL;
     };
 }
 

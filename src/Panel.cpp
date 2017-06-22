@@ -14,9 +14,6 @@ sdlbox::Panel::~Panel() {
 }
 
 void sdlbox::Panel::add(Component* c) {
-    // TODO: Check how SDLBox handles this, I should probably model Panel at
-    // least partly on that
-    
     int lPad, rPad, tPad, bPad;
     c->getPadding(lPad, rPad, tPad, bPad);
     
@@ -68,9 +65,18 @@ void sdlbox::Panel::handle(const SDL_Event &e) {
     }
 }
 
+void sdlbox::Panel::step() {
+    for (auto c : components) {
+        c->step();
+    }
+}
+
 void sdlbox::Panel::repositionChildren() {
     int nx = 0;
     int ny = 0;
+    int w = 1;
+    int h = 1;
+    
     for (size_t i = 0; i < components.size(); i++) {
         auto c = components[i];
 
@@ -83,8 +89,14 @@ void sdlbox::Panel::repositionChildren() {
         else if (orientation == Layout::HORIZONTAL) {
             nx += c->getWidth() + lPad + rPad;
         }
+
+        w = max(c->getX() + c->getWidth() + lPad + rPad, w);
+        h = max(c->getY() + c->getHeight() + tPad + bPad, h);
     }
 
     nextX = nx;
     nextY = ny;
+
+    width = w;
+    height = h;
 }

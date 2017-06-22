@@ -4,11 +4,13 @@
 #include "SDLBox.hpp"
 #include "Button.hpp"
 #include "Label.hpp"
+#include "VolatileLabel.hpp"
 #include "Layout.hpp"
 #include "Panel.hpp"
 #include "Font.hpp"
 #include "Color.hpp"
 #include "GraphicsHelper.hpp"
+#include "UserEvents.hpp"
 
 namespace sdlbox {
     void mainloop(SDLBox* window);

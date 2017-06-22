@@ -16,6 +16,23 @@ int sdlbox::Component::getY() const {
     return y;
 }
 
+SDL_Rect sdlbox::Component::getRect() const {
+    SDL_Rect r;
+    r.x = getX();
+    r.y = getY();
+    r.w = getWidth();
+    r.h = getHeight();
+
+    return r;
+}
+
+bool sdlbox::Component::collides(Component* other) const {
+    SDL_Rect r1 = getRect();
+    SDL_Rect r2 = other->getRect();
+    SDL_Rect res;
+    return SDL_IntersectRect(&r1, &r2, &res);
+}
+
 sdlbox::Component* sdlbox::Component::withPosition(int x, int y) {
     this->x = x;
     this->y = y;
@@ -97,6 +114,8 @@ void sdlbox::Component::handle(const SDL_Event &e) {
     if (l != eventListeners.end())
         (l->second)->handle(e);
 }
+
+void sdlbox::Component::step() { }
 
 void sdlbox::Component::addEventListener(int eventType, EventListener* l) {
     eventListeners[eventType] = l;

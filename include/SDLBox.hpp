@@ -15,24 +15,47 @@ namespace sdlbox {
 
             void setOrientation(int orientation);
             void setFPS(int fps);
+
+            // add event listeners which help handling things
+            void continuallyFitToContent();
+            void ctrlWToQuit();
             
             // freeze size
             void freezeSize();
             void freezeWidth();
             void freezeHeight();
+
+            void unfreezeSize();
+            void unfreezeWidth();
+            void unfreezeHeight();
+
+            bool frozen() const;
+            bool frozenWidth() const;
+            bool frozenHeight() const;
             
             int getFPS() const;
+            int getWidth() const;
+            int getHeight() const;
+            
+            // get random integers
+            int randint(int max) const;
+            int randint(int min, int max) const;
             
             void add(Component* c);
+            void scheduleDestruct(Component* c);
 
             void draw() const;
 
+            void addEventListener(int eventType, EventListener* l);
             void handle(const SDL_Event & e);
+            void step();
 
             void repositionChildren();
 
             static SDLBox* getInstance();
             SDL_Renderer* getRenderer() const;
+        protected:
+            std::vector<Component*> components;
         private:
             int width, height;
             int nextX = 0;
@@ -46,7 +69,8 @@ namespace sdlbox {
 
             static SDLBox* instance;
 
-            std::vector<Component*> components;
+            std::vector<Component*> destroyList; // for destruction each step
+            std::map<int, EventListener*> eventListeners;
 
             // helper methods
             void init(std::string title);

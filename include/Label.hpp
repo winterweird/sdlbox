@@ -1,38 +1,19 @@
 #ifndef INCLUDE_LABEL_HPP_HEADER_GUARD_145122513912977
 #define INCLUDE_LABEL_HPP_HEADER_GUARD_145122513912977
 
-#include "Component.hpp"
-#include <string>
-#include "Color.hpp"
-#include "Texture.hpp"
-#include "Font.hpp"
+#include "Textual.hpp"
 
 namespace sdlbox {
-    class Label : public Component {
+    class Label : public Textual {
         public:
-            Label(std::string text, bool blended=false); // creates black text
-            Label(std::string text, Color color, bool blended=false);
-            Label(std::string text, Color fgColor, Color bgColor); // shaded text
-            ~Label();
-
-            int getWidth() const override;
-            int getHeight() const override;
-
-            // custom setPosition methods which also sets the position of the
-            // underlying Texture
-            Component* withPosition(int x, int y) override;
-            Component* withPosition(Component* relative, int x, int y) override;
-
-            void setText(std::string text, bool blended=false);
-            void setText(Font* font, std::string text, bool blended=false);
-            void setText(std::string text, Color color, bool blended=false);
-            void setText(Font* font, std::string text, Color color, bool blended=false);
+            using Textual::setText;
             
-            void draw() const override;
+            Label(std::string text, bool blended=false); // creates black text
+            Label(std::string text, const Color &color, bool blended=false);
+            Label(std::string text, const Color &fgColor, const Color &bgColor); // shaded text
+        protected:
+            void setText(const std::string &font, int size, const std::string &text, Color* fg, Color* bg, bool blended) override;
         private:
-            Texture* texture = NULL;
-
-            void createTexture(Font* font, std::string text, Color color, bool blended);
     };
 }
 

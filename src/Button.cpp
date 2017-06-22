@@ -1,11 +1,9 @@
 #include "Button.hpp"
 #include "GraphicsHelper.hpp"
 #include "EventListener.hpp"
+#include <iostream> // testing
 
-sdlbox::Button::Button(std::string text, std::function<void (const SDL_Event&)> callback) {
-    Font* font = GraphicsHelper::getDefaultFont();
-    texture = font->render(text, Color(0,0,0));
-    
+sdlbox::Button::Button(std::string text, std::function<void (const SDL_Event&)> callback) : Label(text) {
     addEventListener(SDL_MOUSEBUTTONDOWN, new EventListener([this](const SDL_Event& e) {
         return e.button.button == SDL_BUTTON_LEFT
             && e.button.x > getX() && e.button.x < getX() + getWidth()
@@ -14,23 +12,17 @@ sdlbox::Button::Button(std::string text, std::function<void (const SDL_Event&)> 
 }
 
 sdlbox::Button::Button(std::string text, std::function<bool (const SDL_Event&)> match,
-        std::function<void (const SDL_Event&)> callback) {
-    Font* font = GraphicsHelper::getDefaultFont();
-    texture = font->render(text, Color(0,0,0));
-    
+        std::function<void (const SDL_Event&)> callback) : Label(text) {
     addEventListener(SDL_MOUSEBUTTONDOWN, new EventListener(match, callback));
 }
 
-sdlbox::Button::~Button() {
-    delete texture;
-}
 
 int sdlbox::Button::getWidth() const {
-    return texture->getWidth() + texture->getHeight()/2;
+    return Label::getWidth() + Label::getHeight()/2;
 }
 
 int sdlbox::Button::getHeight() const {
-    return texture->getHeight() + texture->getHeight()/2;
+    return Label::getHeight() + Label::getHeight()/2;
 }
 
 void sdlbox::Button::draw() const {
@@ -41,17 +33,17 @@ void sdlbox::Button::draw() const {
     r.h = getHeight();
 
     GraphicsHelper::drawRoundedRect(&r, r.h/4, Color(0,0,0));
-    texture->draw();
+    Label::draw();
 }
 
 sdlbox::Component* sdlbox::Button::withPosition(int x, int y) {
-    Component::withPosition(x, y);
-    texture->withPosition(this, getHeight()/4, getHeight()/4);
+    Label::withPosition(x, y);
+    repositionTexture(Label::getHeight()/4, Label::getHeight()/4);
     return this;
 }
 
 sdlbox::Component* sdlbox::Button::withPosition(Component* relative, int x, int y) {
-    Component::withPosition(relative, x, y);
-    texture->withPosition(this, getHeight()/4, getHeight()/4);
+    Label::withPosition(relative, x, y);
+    repositionTexture(Label::getHeight()/4, Label::getHeight()/4);
     return this;
 }

@@ -5,84 +5,22 @@
 
 using std::string;
 
-sdlbox::Label::Label(string text, bool blended) : texture(NULL) {
-    Font* font = GraphicsHelper::getDefaultFont();
-    createTexture(font, text, Color(0,0,0), blended);
+sdlbox::Label::Label(string text, bool blended) {
+    Textual::setText(text, blended);
     withPadding(2, 2);
 }
 
-sdlbox::Label::Label(string text, Color color, bool blended) : texture(NULL) {
-    Font* font = GraphicsHelper::getDefaultFont();
-    createTexture(font, text, color, blended);
+sdlbox::Label::Label(string text, const Color &color, bool blended) {
+    Textual::setText(text, color, blended);
     withPadding(2, 2);
 }
 
-sdlbox::Label::Label(string text, Color fgColor, Color bgColor) : texture(NULL) {
-    Font* font = GraphicsHelper::getDefaultFont();
-    texture = font->renderShaded(text, fgColor, bgColor);
-    
+sdlbox::Label::Label(string text, const Color &fgColor, const Color &bgColor) {
+    Textual::setText(text, fgColor, bgColor);
     withPadding(2, 2);
 }
 
-sdlbox::Label::~Label() {
-    delete texture;
-}
-
-int sdlbox::Label::getWidth() const {
-    return texture->getWidth();
-}
-
-int sdlbox::Label::getHeight() const {
-    return texture->getHeight();
-}
-
-sdlbox::Component* sdlbox::Label::withPosition(int x, int y) {
-    Component::withPosition(x, y);
-    texture->withPosition(this, 0, 0);
-    return this;
-}
-
-sdlbox::Component* sdlbox::Label::withPosition(Component* relative, int x, int y) {
-    Component::withPosition(relative, x, y);
-    texture->withPosition(this, 0, 0);
-    return this;
-}
-
-void sdlbox::Label::setText(string text, bool blended) {
-    auto font = GraphicsHelper::getDefaultFont();
-    createTexture(font, text, Color(0,0,0), blended);
-}
-
-void sdlbox::Label::setText(Font* font, string text, bool blended) {
-    createTexture(font, text, Color(0,0,0), blended);
-}
-
-void sdlbox::Label::setText(string text, Color color, bool blended) {
-    auto font = GraphicsHelper::getDefaultFont();
-    createTexture(font, text, color, blended);
-}
-
-void sdlbox::Label::setText(Font* font, string text, Color color, bool blended) {
-    createTexture(font, text, color, blended);
-}
-
-void sdlbox::Label::draw() const {
-    texture->draw();
-}
-
-// helper method
-void sdlbox::Label::createTexture(Font* font, string text, Color color, bool blended) {
-    if (texture != NULL) {
-        delete texture;
-    }
-    //mtx.lock();
-    if (blended) {
-        texture = font->renderBlended(text, color);
-    }
-    else {
-        texture = font->render(text, color);
-    }
-    //mtx.unlock();
-
-    SDLBox::getInstance()->repositionChildren(); // update display // actually, don't
+void sdlbox::Label::setText(const std::string &font, int size, const std::string &text, Color* fg, Color* bg, bool blended) {
+    Textual::setText(font, size, text, fg, bg, blended);
+    commit(); // actually make the texture
 }

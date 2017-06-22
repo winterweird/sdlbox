@@ -22,6 +22,10 @@ namespace sdlbox {
             virtual int getX() const;
             virtual int getY() const;
 
+            SDL_Rect getRect() const;
+
+            virtual bool collides(Component* c) const; // check collision with other component
+
             virtual Component* withPosition(int x, int y);
             virtual Component* withPosition(Component* relative, int x, int y);
 
@@ -46,10 +50,11 @@ namespace sdlbox {
             // whether or not the specified component should receive its
             // position from its parent or not
             virtual bool receivePosition() const;
-            
+
             virtual void draw() const = 0;
 
             virtual void handle(const SDL_Event &e);
+            virtual void step(); // method where each component updates itself
             
             void addEventListener(int eventType, EventListener* l);
         private:

@@ -2,7 +2,7 @@
 
 CC = g++
 CFLAGS = -g -Wall -std=c++11 -I$(INCDIR) -L$(LIBDIR)
-LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lpthread
+LIBS = -lsdlbox -lSDL2 -lSDL2_ttf -lSDL2_image -lpthread
 
 SRCDIR = src/
 INCDIR = include/
@@ -10,10 +10,12 @@ BINDIR = bin/
 OBJDIR = obj/
 LIBDIR = lib/
 
-OUTFILE = $(BINDIR)main
-OUTSRCFILE = $(SRCDIR)actualProgramTest.cpp
+SDLBOX_LIB = libsdlbox.a
 
-OBJFILES_NODIR = sdlbox SDLBox Font Color GraphicsHelper Label Texture Component Panel Button EventListener
+OUTFILE = $(BINDIR)main
+OUTSRCFILE = $(SRCDIR)flappyBirdTestGame.cpp
+
+OBJFILES_NODIR = sdlbox SDLBox Font Color GraphicsHelper Label Texture Component Panel Button EventListener TextureComponent UserEvents Textual VolatileLabel
 
 OBJFILES = $(addprefix $(OBJDIR),$(OBJFILES_NODIR:=.o))
 
@@ -21,13 +23,16 @@ OBJFILES = $(addprefix $(OBJDIR),$(OBJFILES_NODIR:=.o))
 
 all: $(OUTFILE)
 
-$(OUTFILE): $(OUTSRCFILE) $(OBJFILES)
-	$(CC) $(CFLAGS) $< $(OBJFILES) $(LIBS) -o $@
+$(OUTFILE): $(OUTSRCFILE) $(LIBDIR)$(SDLBOX_LIB)
+	$(CC) $(CFLAGS) $< $(LIBS) -o $@
 
 $(OBJDIR)%.o: $(SRCDIR)%.cpp $(INCDIR)%.hpp
 	$(CC) $(CFLAGS) -c $< $(LIBS) -o $@
 
+$(LIBDIR)$(SDLBOX_LIB): $(OBJFILES)
+	ar cr $@ $(OBJFILES)
+
 clean:
-	rm obj/* bin/*
+	-rm obj/* bin/*
 
 init:	mkdir src bin include lib obj

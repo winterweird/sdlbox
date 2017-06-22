@@ -1,9 +1,12 @@
 #include "SDLBox.hpp"
 #include "GraphicsHelper.hpp"
+#include "UserEvents.hpp"
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <algorithm> // std::max
 #include <mutex>
+#include <cstdlib>
+#include <ctime>
 
 using std::string;
 using std::runtime_error;
@@ -21,9 +24,19 @@ sdlbox::SDLBox::~SDLBox() {
         delete c;
     }
 
-    // delete default font
-    Font* f = GraphicsHelper::getDefaultFont();
-    delete f;
+    // destroy all components scheduled for destruction which we haven't
+    // destroyed yet
+    for (auto c : destroyList) {
+        delete c;
+    }
+
+    // destroy all event listeners
+    for (auto l : eventListeners) {
+        delete l.second;
+    }
+
+    // delete loaded fonts
+    GraphicsHelper::freeLoadedFonts();
     
     TTF_Quit();
     SDL_DestroyRenderer(renderer);
@@ -47,6 +60,23 @@ void sdlbox::SDLBox::setFPS(int fps) {
     this->FPS = fps;
 }
 
+void sdlbox::SDLBox::continuallyFitToContent() {
+    this->addEventListener(UserEvents::existingEventCode("WINDOW_FIT_TO_CONTENT"),
+        new EventListener([this](const SDL_Event &e) {
+            this->repositionChildren();
+        }));
+}
+
+void sdlbox::SDLBox::ctrlWToQuit() {
+    this->addEventListener(SDL_KEYDOWN, new EventListener([](const SDL_Event &e) {
+            if (e.key.keysym.sym == SDLK_w && e.key.keysym.mod & KMOD_CTRL) {
+                SDL_Event e;
+                e.type = SDL_QUIT;
+                SDL_PushEvent(&e);
+            }
+        }));
+}
+
 void sdlbox::SDLBox::freezeSize() {
     freezeWidth();
     freezeHeight();
@@ -60,10 +90,68 @@ void sdlbox::SDLBox::freezeHeight() {
     autoResizeHeight = false;
 }
 
+void sdlbox::SDLBox::unfreezeSize() {
+    unfreezeWidth();
+    unfreezeHeight();
+}
+
+void sdlbox::SDLBox::unfreezeWidth() {
+    autoResizeWidth = true;
+}
+
+void sdlbox::SDLBox::unfreezeHeight() {
+    autoResizeHeight = true;
+}
+
+bool sdlbox::SDLBox::frozen() const {
+    return frozenWidth() && frozenHeight();
+}
+
+bool sdlbox::SDLBox::frozenWidth() const {
+    return !autoResizeWidth;
+}
+
+bool sdlbox::SDLBox::frozenHeight() const {
+    return !autoResizeHeight;
+}
+
 int sdlbox::SDLBox::getFPS() const {
     return FPS;
 }
 
+int sdlbox::SDLBox::getWidth() const {
+    return width;
+}
+
+int sdlbox::SDLBox::getHeight() const {
+    return height;
+}
+
+int sdlbox::SDLBox::randint(int max) const {
+    // adapted from: https://stackoverflow.com/a/822361/4498826
+    
+    if (max < 0) {
+        throw runtime_error("randint: Max cannot be negative");
+    }
+    if (max == RAND_MAX)
+        return rand();
+
+    int oneMore = max+1;
+    long end = RAND_MAX / oneMore;
+    end *= oneMore;
+
+    int r;
+    while ((r = rand()) >= end);
+
+    return r%oneMore;
+}
+
+int sdlbox::SDLBox::randint(int min, int max) const {
+    if (min > max) {
+        throw runtime_error("randint: Min cannot be greater than max");
+    }
+    return randint(max-min) + min;
+}
 
 void sdlbox::SDLBox::add(Component* c) {
     // short names:
@@ -98,6 +186,14 @@ void sdlbox::SDLBox::add(Component* c) {
     components.push_back(c);
 }
 
+void sdlbox::SDLBox::scheduleDestruct(Component* c) {
+    auto i = find(components.begin(), components.end(), c);
+    if (i != components.end()) {
+        components.erase(i);
+        destroyList.push_back(c);
+    }
+}
+
 void sdlbox::SDLBox::draw() const {
     SDL_RenderClear(renderer);
 
@@ -109,9 +205,27 @@ void sdlbox::SDLBox::draw() const {
 }
 
 void sdlbox::SDLBox::handle(const SDL_Event &e) {
+    auto l = eventListeners.find(e.type);
+    if (l != eventListeners.end())
+        (l->second)->handle(e);
+    
     for (auto c : components) {
         c->handle(e);
     }
+}
+
+void sdlbox::SDLBox::step() {
+    for (auto c : destroyList) {
+        delete c;
+    }
+    destroyList.clear();
+    for (auto c : components) {
+        c->step();
+    }
+}
+
+void sdlbox::SDLBox::addEventListener(int eventType, EventListener* l) {
+    eventListeners[eventType] = l;
 }
 
 void sdlbox::SDLBox::repositionChildren() {
@@ -172,9 +286,6 @@ void sdlbox::SDLBox::init(string title) {
         throw runtime_error("SDL init error: " + string(SDL_GetError()));
     }
 
-    // TODO: Simply passing width/height to the window like this is broken if we
-    // operate with variable sized windows. I need to fix that.
-    
     if (width <= 0) {
         autoResizeWidth = true;
         width = 1;
@@ -195,7 +306,7 @@ void sdlbox::SDLBox::init(string title) {
         throw runtime_error("SDL window create error: " + string(SDL_GetError()));
     }
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); // fuck VSYNC
 
     if (renderer == NULL) {
         throw runtime_error("SDL renderer create error: " + string(SDL_GetError()));
@@ -207,6 +318,12 @@ void sdlbox::SDLBox::init(string title) {
     if (TTF_Init() == -1) {
         throw runtime_error("TTF init error: " + string(TTF_GetError()));
     }
+
+    // set up event codes
+    UserEvents::eventCode("WINDOW_FIT_TO_CONTENT");
+
+    // init RNG
+    srand(time(NULL));
 
     instance = this;
 }
