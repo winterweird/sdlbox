@@ -176,77 +176,77 @@ class PillarSpawnPoint : public Component {
 
 class Game : public SDLBox {
     public:
-        Game() : SDLBox("Flappy bird!", 640, 480) {
-            UserEvents::eventCode("GameOverEvent"); // set up event code
-            
-            addEventListener(UserEvents::existingEventCode("GameOverEvent"),
-                    new EventListener([this](const SDL_Event &e) {
-                        goToRoom(Room::GAME_OVER);
-                    }));
-
-            initGameOverScreen();
-
-            goToRoom(Room::GAME);
-        }
-        ~Game() {
-            for (auto c : gameComponents) {
-                delete c;
-            }
-            for (auto c : gameOverComponents) {
-                delete c;
-            }
-            components.clear(); // avoid double delete in parent dtor
-        }
-    private:
-        double gravity = 0.2;
-
-        enum class Room {
-            GAME,
-            GAME_OVER
-        };
-
-        void goToRoom(Room room) {
-            switch(room) {
-                case Room::GAME:
-                    initGame();
-                    break;
-                case Room::GAME_OVER:
-                    destroyGame();
-                    components = gameOverComponents;
-                    break;
-            }
-            
-            activeRoom = room;
-        }
-
-        void initGameOverScreen() {
-            Label* gameOver = new Label("GAME OVER");
-            gameOver->withPosition(getWidth()/2, getHeight()/2);
-            gameOverComponents.push_back(gameOver);
-        }
-
-        void initGame() {
-            Bird* birb = new Bird(300, 200, &gravity);
-            add(birb);
-            
-            add(new PillarSpawnPoint(getWidth() + 10, 100, 50));
-        }
-        
-        void destroyGame() {
-            if (activeRoom != Room::GAME) {
-                throw runtime_error("Illegal state: destroyGame called from game over screen");
-            }
-            
-            for (auto c : components) {
-                delete c;
-            }
-            components.clear();
-        }
-
-        vector<Component*> gameComponents;
-        vector<Component*> gameOverComponents;
-
-        Room activeRoom;
+        Game() : SDLBox("Flappy bird!", 640, 480) { }
+//            UserEvents::eventCode("GameOverEvent"); // set up event code
+//
+//            addEventListener(UserEvents::existingEventCode("GameOverEvent"),
+//                    new EventListener([this](const SDL_Event &e) {
+//                        goToRoom(Room::GAME_OVER);
+//                    }));
+//
+//            initGameOverScreen();
+//
+//            goToRoom(Room::GAME);
+//        }
+//        ~Game() {
+//            for (auto c : gameComponents) {
+//                delete c;
+//            }
+//            for (auto c : gameOverComponents) {
+//                delete c;
+//            }
+//            components.clear(); // avoid double delete in parent dtor
+//        }
+//    private:
+//        double gravity = 0.2;
+//
+//        enum class Room {
+//            GAME,
+//            GAME_OVER
+//        };
+//
+//        void goToRoom(Room room) {
+//            switch(room) {
+//                case Room::GAME:
+//                    initGame();
+//                    break;
+//                case Room::GAME_OVER:
+//                    destroyGame();
+//                    components = gameOverComponents;
+//                    break;
+//            }
+//
+//            activeRoom = room;
+//        }
+//
+//        void initGameOverScreen() {
+//            Label* gameOver = new Label("GAME OVER");
+//            gameOver->withPosition(getWidth()/2, getHeight()/2);
+//            gameOverComponents.push_back(gameOver);
+//        }
+//
+//        void initGame() {
+//            Bird* birb = new Bird(300, 200, &gravity);
+//            add(birb);
+//
+//            add(new PillarSpawnPoint(getWidth() + 10, 100, 50));
+//        }
+//
+//        void destroyGame() {
+//            if (activeRoom != Room::GAME) {
+//                throw runtime_error("Illegal state: destroyGame called from game over screen");
+//            }
+//
+//            for (auto c : components) {
+//                delete c;
+//            }
+//            components.clear();
+//        }
+//
+//        vector<Component*> gameComponents;
+//        vector<Component*> gameOverComponents;
+//
+//        Room activeRoom;
 };
 
 int main(int argc, char** argv) {

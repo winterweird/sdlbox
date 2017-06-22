@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 #include "Component.hpp"
 #include "Layout.hpp"
+#include "Room.hpp"
 
 namespace sdlbox {
     class SDLBox {
@@ -40,6 +41,10 @@ namespace sdlbox {
             // get random integers
             int randint(int max) const;
             int randint(int min, int max) const;
+
+            void goToRoom(const Room &room);
+            void wipe();
+            void wipe(const Room &room);
             
             void add(Component* c);
             void scheduleDestruct(Component* c);
@@ -54,8 +59,6 @@ namespace sdlbox {
 
             static SDLBox* getInstance();
             SDL_Renderer* getRenderer() const;
-        protected:
-            std::vector<Component*> components;
         private:
             int width, height;
             int nextX = 0;
@@ -69,6 +72,7 @@ namespace sdlbox {
 
             static SDLBox* instance;
 
+            std::vector<Component*> components;
             std::vector<Component*> destroyList; // for destruction each step
             std::map<int, EventListener*> eventListeners;
 
