@@ -33,15 +33,31 @@ bool sdlbox::Component::collides(Component* other) const {
     return SDL_IntersectRect(&r1, &r2, &res);
 }
 
-sdlbox::Component* sdlbox::Component::withPosition(int x, int y) {
+sdlbox::Component* sdlbox::Component::withPosition(int x, int y, int anchor) {
+    if (anchor < -1);
+    else if (anchor > 1)
+        x -= getWidth();
+    else
+        x -= getWidth()/2;
+    
+    if ((anchor + 2) % 3 == 0);
+    else if ((anchor - 2) % 3 == 0)
+        y -= getHeight();
+    else
+        y -= getHeight()/2;
+    
     this->x = x;
     this->y = y;
     return this;
 }
 
-sdlbox::Component* sdlbox::Component::withPosition(Component* relative, int x, int y) {
-    this->x = relative->getX() + x;
-    this->y = relative->getY() + y;
+sdlbox::Component* sdlbox::Component::withPosition(Component* relative, int x, int y, int anchor) {
+    return withPosition(relative->getX() + x, relative->getY() + y, anchor);
+}
+
+
+sdlbox::Component* sdlbox::Component::withReceivePosition(bool val) {
+    this->rcvPos = val;
     return this;
 }
 
@@ -122,5 +138,5 @@ void sdlbox::Component::addEventListener(int eventType, EventListener* l) {
 }
 
 bool sdlbox::Component::receivePosition() const {
-    return true;
+    return rcvPos;
 }

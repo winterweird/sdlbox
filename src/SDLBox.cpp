@@ -20,8 +20,10 @@ sdlbox::SDLBox::SDLBox(string title, int width, int height) : width(width), heig
 
 sdlbox::SDLBox::~SDLBox() {
     // destroy all children
-    for (auto c : components) {
-        delete c;
+    for (auto r : components) {
+        for (auto c : r.second) {
+            delete c;
+        }
     }
 
     // destroy all components scheduled for destruction which we haven't
@@ -154,11 +156,35 @@ int sdlbox::SDLBox::randint(int min, int max) const {
 }
 
 void sdlbox::SDLBox::goToRoom(const Room &room) {
-    activeRoom = room;
+    if (roomSupport) {
+        activeRoom = room;
+        components[room]; // ensure room exists
+    }
+    else
+        throw runtime_error("Changing room not supported in auto content fit mode");
+}
+
+sdlbox::Room sdlbox::SDLBox::getActiveRoom() const {
+    return activeRoom;
+}
+
+void sdlbox::SDLBox::wipe() {
+    wipe(activeRoom);
+}
+
+void sdlbox::SDLBox::wipe(const Room &room) {
+    auto roomComponents = getRoomComponents(room);
+    for (auto c : roomComponents) {
+        delete c;
+    }
+    
+    roomComponents.clear();
+    components[room] = roomComponents; // update map content
 }
 
 void sdlbox::SDLBox::add(Component* c) {
     // short names:
+    auto roomComponents = getRoomComponents(activeRoom);
     int lPad, rPad, tPad, bPad;
     c->getPadding(lPad, rPad, tPad, bPad);
     
@@ -187,13 +213,17 @@ void sdlbox::SDLBox::add(Component* c) {
         resize(w, h);
     }
     
-    components.push_back(c);
+    roomComponents.push_back(c);
+    components[activeRoom] = roomComponents; // update map content
 }
 
 void sdlbox::SDLBox::scheduleDestruct(Component* c) {
-    auto i = find(components.begin(), components.end(), c);
-    if (i != components.end()) {
-        components.erase(i);
+    auto roomComponents = getRoomComponents(activeRoom);
+    auto i = find(roomComponents.begin(), roomComponents.end(), c);
+    if (i != roomComponents.end()) {
+        roomComponents.erase(i);
+        components[activeRoom] = roomComponents; // update map content
+        
         destroyList.push_back(c);
     }
 }
@@ -201,7 +231,8 @@ void sdlbox::SDLBox::scheduleDestruct(Component* c) {
 void sdlbox::SDLBox::draw() const {
     SDL_RenderClear(renderer);
 
-    for (auto c : components) {
+    auto roomComponents = getRoomComponents(activeRoom);
+    for (auto c : roomComponents) {
         c->draw();
     }
 
@@ -213,7 +244,8 @@ void sdlbox::SDLBox::handle(const SDL_Event &e) {
     if (l != eventListeners.end())
         (l->second)->handle(e);
     
-    for (auto c : components) {
+    auto roomComponents = getRoomComponents(activeRoom);
+    for (auto c : roomComponents) {
         c->handle(e);
     }
 }
@@ -223,7 +255,9 @@ void sdlbox::SDLBox::step() {
         delete c;
     }
     destroyList.clear();
-    for (auto c : components) {
+    
+    auto roomComponents = getRoomComponents(activeRoom);
+    for (auto c : roomComponents) {
         c->step();
     }
 }
@@ -238,8 +272,10 @@ void sdlbox::SDLBox::repositionChildren() {
     int w = 1;
     int h = 1;
 
-    for (size_t i = 0; i < components.size(); i++) {
-        auto c = components[i];
+    auto roomComponents = getRoomComponents(activeRoom);
+    for (size_t i = 0; i < roomComponents.size(); i++) {
+        auto c = roomComponents[i];
+        if (!c->receivePosition()) continue;
         
         int lPad, rPad, tPad, bPad;
         c->getPadding(lPad, rPad, tPad, bPad);
@@ -293,10 +329,12 @@ void sdlbox::SDLBox::init(string title) {
     if (width <= 0) {
         autoResizeWidth = true;
         width = 1;
+        roomSupport = false;
     }
     if (height <= 0) {
         autoResizeHeight = true;
         height = 1;
+        roomSupport = false;
     }
     
     window = SDL_CreateWindow(title.c_str(),
@@ -326,6 +364,8 @@ void sdlbox::SDLBox::init(string title) {
     // set up event codes
     UserEvents::eventCode("WINDOW_FIT_TO_CONTENT");
 
+    components[activeRoom]; // create initial room
+
     // init RNG
     srand(time(NULL));
 
@@ -341,4 +381,13 @@ void sdlbox::SDLBox::resize(int w, int h) {
     
     width = w;
     height = h;
+}
+
+std::vector<sdlbox::Component*> sdlbox::SDLBox::getRoomComponents(const Room &room) const {
+    auto r = components.find(room);
+    if (r == components.end()) {
+        throw runtime_error("Room not found: " + room.str());
+    }
+
+    return r->second;
 }

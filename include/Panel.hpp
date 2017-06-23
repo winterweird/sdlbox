@@ -7,6 +7,8 @@
 namespace sdlbox {
     class Panel : public Component {
         public:
+            using Component::withPosition;
+            
             Panel(int orientation);
             ~Panel();
             
@@ -15,8 +17,7 @@ namespace sdlbox {
             int getWidth() const override;
             int getHeight() const override;
 
-            Component* withPosition(int x, int y) override;
-            Component* withPosition(Component* relative, int x, int y) override;
+            Component* withPosition(int x, int y, int anchor=Layout::TOPLEFT) override;
             
             void draw() const override;
 

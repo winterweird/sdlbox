@@ -25,6 +25,10 @@ class Bird : public Component {
             }));
         }
 
+        ~Bird() {
+            instance = NULL;
+        }
+
         static Bird* getInstance() {
             return instance;
         }
@@ -112,6 +116,7 @@ class Pillar : public Component {
             else {
                 x -= hspeed;
             }
+            
             Bird* bird = Bird::getInstance();
             if (bird->collides(this)) {
                 SDL_Event e;
@@ -174,86 +179,59 @@ class PillarSpawnPoint : public Component {
         static const int countdownVariance = 40;
 };
 
-class Game : public SDLBox {
-    public:
-        Game() : SDLBox("Flappy bird!", 640, 480) { }
-//            UserEvents::eventCode("GameOverEvent"); // set up event code
-//
-//            addEventListener(UserEvents::existingEventCode("GameOverEvent"),
-//                    new EventListener([this](const SDL_Event &e) {
-//                        goToRoom(Room::GAME_OVER);
-//                    }));
-//
-//            initGameOverScreen();
-//
-//            goToRoom(Room::GAME);
-//        }
-//        ~Game() {
-//            for (auto c : gameComponents) {
-//                delete c;
-//            }
-//            for (auto c : gameOverComponents) {
-//                delete c;
-//            }
-//            components.clear(); // avoid double delete in parent dtor
-//        }
-//    private:
-//        double gravity = 0.2;
-//
-//        enum class Room {
-//            GAME,
-//            GAME_OVER
-//        };
-//
-//        void goToRoom(Room room) {
-//            switch(room) {
-//                case Room::GAME:
-//                    initGame();
-//                    break;
-//                case Room::GAME_OVER:
-//                    destroyGame();
-//                    components = gameOverComponents;
-//                    break;
-//            }
-//
-//            activeRoom = room;
-//        }
-//
-//        void initGameOverScreen() {
-//            Label* gameOver = new Label("GAME OVER");
-//            gameOver->withPosition(getWidth()/2, getHeight()/2);
-//            gameOverComponents.push_back(gameOver);
-//        }
-//
-//        void initGame() {
-//            Bird* birb = new Bird(300, 200, &gravity);
-//            add(birb);
-//
-//            add(new PillarSpawnPoint(getWidth() + 10, 100, 50));
-//        }
-//
-//        void destroyGame() {
-//            if (activeRoom != Room::GAME) {
-//                throw runtime_error("Illegal state: destroyGame called from game over screen");
-//            }
-//
-//            for (auto c : components) {
-//                delete c;
-//            }
-//            components.clear();
-//        }
-//
-//        vector<Component*> gameComponents;
-//        vector<Component*> gameOverComponents;
-//
-//        Room activeRoom;
-};
-
 int main(int argc, char** argv) {
-    Game game;
+    SDLBox window("Flappy bird!", 640, 480);
 
-    game.ctrlWToQuit();
+    // set up event code
+    UserEvents::eventCode("GameOverEvent");
+    UserEvents::eventCode("RestartGameEvent");
 
-    mainloop(&game);
+    Rooms::addRoom("Game");
+    Rooms::addRoom("Game Over");
+
+    // setup game over screen
+    window.goToRoom(Room("Game Over"));
+    window.add((new Label("GAME OVER"))->withPosition(320, 240, Layout::CENTER)->withReceivePosition(false));
+    window.add((new Label("(press space to play again)"))->withPosition(320, 270, Layout::CENTER)->withReceivePosition(false));
+
+    window.addEventListener(UserEvents::existingEventCode("GameOverEvent"),
+            new EventListener([&](const SDL_Event &e) {
+                return window.getActiveRoom() == "Game";
+            }, [&](const SDL_Event &e) {
+                window.goToRoom(Room("Game Over"));
+            }));
+
+    window.ctrlWToQuit();
+
+    double gravity = 0.2;
+    auto initGame = [&](const SDL_Event &e) {
+        window.goToRoom(Room("Game"));
+        window.wipe();
+
+        Bird* birb = new Bird(300, 200, &gravity);
+        window.add(birb);
+        
+        window.add(new PillarSpawnPoint(window.getWidth() + 10, 100, 50));
+    };
+
+    window.addEventListener(UserEvents::existingEventCode("RestartGameEvent"),
+            new EventListener(initGame));
+    
+    window.addEventListener(SDL_KEYDOWN, new EventListener([&](const SDL_Event &e) {
+        SDL_Event ev;
+        if (window.getActiveRoom() == "Game Over" && e.key.keysym.sym == SDLK_SPACE) {
+            ev.type = UserEvents::existingEventCode("RestartGameEvent");
+            SDL_PushEvent(&ev);
+        }
+        else if (e.key.keysym.sym == SDLK_ESCAPE || (e.key.keysym.sym == SDLK_w
+                && e.key.keysym.mod & KMOD_CTRL)) {
+            ev.type = SDL_QUIT;
+            SDL_PushEvent(&ev);
+        }
+    }));
+
+    initGame(SDL_Event());
+
+    mainloop(&window);
     return 0;
 }

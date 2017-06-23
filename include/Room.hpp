@@ -11,8 +11,13 @@ namespace sdlbox {
         public:
             Room(); // empty constructor
             Room(const std::string &roomName);
-            bool operator==(const std::string &roomName);
-            bool operator==(const Room &other);
+            
+            bool operator<(const Room &other) const;
+            bool operator==(const std::string &roomName) const;
+            bool operator==(const Room &other) const;
+            
+            std::string str() const;
+            
             friend class Rooms;
         private:
             Room(int id);

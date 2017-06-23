@@ -6,6 +6,7 @@
 #include <mutex>
 #include <condition_variable>
 #include "EventListener.hpp"
+#include "Layout.hpp"
 
 namespace sdlbox {
     extern std::mutex mtx;
@@ -26,8 +27,10 @@ namespace sdlbox {
 
             virtual bool collides(Component* c) const; // check collision with other component
 
-            virtual Component* withPosition(int x, int y);
-            virtual Component* withPosition(Component* relative, int x, int y);
+            virtual Component* withPosition(int x, int y, int anchor=Layout::TOPLEFT);
+            virtual Component* withPosition(Component* relative, int x, int y, int anchor=Layout::TOPLEFT);
+
+            virtual Component* withReceivePosition(bool val);
 
             virtual int getVerticalPadding() const;
             virtual int getHorizontalPadding() const;
@@ -60,6 +63,7 @@ namespace sdlbox {
         private:
             int x, y;
             int rPad = 0, lPad = 0, tPad = 0, bPad = 0;
+            bool rcvPos = true;
 
             std::map<int, EventListener*> eventListeners;
     };

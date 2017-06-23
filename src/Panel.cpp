@@ -40,14 +40,8 @@ int sdlbox::Panel::getHeight() const {
     return height;
 }
 
-sdlbox::Component* sdlbox::Panel::withPosition(int x, int y) {
-    Component::withPosition(x, y);
-    repositionChildren();
-    return this;
-}
-
-sdlbox::Component* sdlbox::Panel::withPosition(Component* relative, int x, int y) {
-    Component::withPosition(relative, x, y);
+sdlbox::Component* sdlbox::Panel::withPosition(int x, int y, int anchor) {
+    Component::withPosition(x, y, anchor);
     repositionChildren();
     return this;
 }

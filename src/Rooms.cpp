@@ -12,10 +12,26 @@ void sdlbox::Rooms::addRoom(const std::string &roomName) {
 }
 
 sdlbox::Room sdlbox::Rooms::getRoom(const std::string &roomName) {
+    if (roomName == "DEFAULT")
+        return Room(); // default room
+    
     auto r = rooms.find(roomName);
     if (r == rooms.end()) {
         throw runtime_error("Error getting room " + roomName + ": no such room");
     }
 
     return Room(r->second);
+}
+
+std::string sdlbox::Rooms::getRoomName(const Room &room) {
+    if (room.id == -1)
+        return "DEFAULT";
+    
+    for (auto r : rooms) {
+        if (r.second == room.id) {
+            return r.first;
+        }
+    }
+
+    throw runtime_error("No room name found corresponding to given id");
 }

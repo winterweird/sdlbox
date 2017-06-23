@@ -43,6 +43,8 @@ namespace sdlbox {
             int randint(int min, int max) const;
 
             void goToRoom(const Room &room);
+            Room getActiveRoom() const;
+
             void wipe();
             void wipe(const Room &room);
             
@@ -63,10 +65,11 @@ namespace sdlbox {
             int width, height;
             int nextX = 0;
             int nextY = 0;
-            bool autoResizeWidth, autoResizeHeight;
+            bool autoResizeWidth = false, autoResizeHeight = false;
             int orientation = Layout::VERTICAL;
             int FPS = 60;
 
+            bool roomSupport = true;
             Room activeRoom;
             
             SDL_Window* window = NULL;
@@ -74,13 +77,14 @@ namespace sdlbox {
 
             static SDLBox* instance;
 
-            std::vector<Component*> components;
+            std::map<Room, std::vector<Component*> > components;
             std::vector<Component*> destroyList; // for destruction each step
             std::map<int, EventListener*> eventListeners;
 
             // helper methods
             void init(std::string title);
             void resize(int w, int h);
+            std::vector<Component*> getRoomComponents(const Room &room) const;
     };
 }
 

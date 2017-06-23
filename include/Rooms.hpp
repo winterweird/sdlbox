@@ -10,6 +10,7 @@ namespace sdlbox {
         public:
             static void addRoom(const std::string &roomName);
             static Room getRoom(const std::string &roomName);
+            static std::string getRoomName(const Room &room);
         private:
             static std::map<std::string, int> rooms;
     };

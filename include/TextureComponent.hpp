@@ -8,14 +8,15 @@ namespace sdlbox {
     // wrapper component for texture
     class TextureComponent : public Component {
         public:
+            using Component::withPosition;
+
             ~TextureComponent();
             int getWidth() const override;
             int getHeight() const override;
             
             void draw() const override;
 
-            Component* withPosition(int x, int y) override;
-            Component* withPosition(Component* relative, int x, int y) override;
+            Component* withPosition(int x, int y, int anchor=Layout::TOPLEFT) override;
         protected:
             void setTexture(Texture* t);
             void repositionTexture(int xOffset, int yOffset);

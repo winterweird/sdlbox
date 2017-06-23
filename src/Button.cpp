@@ -36,14 +36,14 @@ void sdlbox::Button::draw() const {
     Label::draw();
 }
 
-sdlbox::Component* sdlbox::Button::withPosition(int x, int y) {
-    Label::withPosition(x, y);
+sdlbox::Component* sdlbox::Button::withPosition(int x, int y, int anchor) {
+    Label::withPosition(x, y, anchor);
     repositionTexture(Label::getHeight()/4, Label::getHeight()/4);
     return this;
 }
 
-sdlbox::Component* sdlbox::Button::withPosition(Component* relative, int x, int y) {
-    Label::withPosition(relative, x, y);
+sdlbox::Component* sdlbox::Button::withPosition(Component* relative, int x, int y, int anchor) {
+    Label::withPosition(relative, x, y, anchor);
     repositionTexture(Label::getHeight()/4, Label::getHeight()/4);
     return this;
 }

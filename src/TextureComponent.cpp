@@ -13,14 +13,8 @@ int sdlbox::TextureComponent::getHeight() const {
     return texture->getHeight();
 }
 
-sdlbox::Component* sdlbox::TextureComponent::withPosition(int x, int y) {
-    Component::withPosition(x, y);
-    repositionTexture(0, 0);
-    return this;
-}
-
-sdlbox::Component* sdlbox::TextureComponent::withPosition(Component* relative, int x, int y) {
-    Component::withPosition(relative, x, y);
+sdlbox::Component* sdlbox::TextureComponent::withPosition(int x, int y, int anchor) {
+    Component::withPosition(x, y, anchor);
     repositionTexture(0, 0);
     return this;
 }

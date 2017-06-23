@@ -10,6 +10,8 @@
 namespace sdlbox {
     class Button : public Label {
         public:
+            using Label::withPosition;
+            
             Button(std::string text, std::function<void (const SDL_Event&)> callback);
             Button(std::string text, std::function<bool (const SDL_Event&)> match,
                     std::function<void (const SDL_Event&)> callback);
@@ -17,8 +19,8 @@ namespace sdlbox {
             int getWidth() const override;
             int getHeight() const override;
 
-            Component* withPosition(int x, int y) override;
-            Component* withPosition(Component* relative, int x, int y) override;
+            Component* withPosition(int x, int y, int anchor=Layout::TOPLEFT) override;
+            Component* withPosition(Component* relative, int x, int y, int anchor=Layout::TOPLEFT) override;
             
             void draw() const override;
         private:

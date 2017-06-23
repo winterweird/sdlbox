@@ -14,10 +14,18 @@ sdlbox::Room::Room(const std::string &roomName) {
 
 sdlbox::Room::Room(int id) : id(id) {}
 
-bool sdlbox::Room::operator==(const std::string &roomName) {
+bool sdlbox::Room::operator<(const Room &other) const {
+    return this->id < other.id;
+}
+
+bool sdlbox::Room::operator==(const std::string &roomName) const {
     return (*this) == Rooms::getRoom(roomName);
 }
 
-bool sdlbox::Room::operator==(const Room &other) {
+bool sdlbox::Room::operator==(const Room &other) const {
     return this->id == other.id;
+}
+
+std::string sdlbox::Room::str() const {
+    return Rooms::getRoomName(*this);
 }

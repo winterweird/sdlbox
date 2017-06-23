@@ -11,6 +11,7 @@
 #include "Color.hpp"
 #include "GraphicsHelper.hpp"
 #include "UserEvents.hpp"
+#include "Rooms.hpp"
 
 namespace sdlbox {
     void mainloop(SDLBox* window);
