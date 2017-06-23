@@ -28,6 +28,7 @@ void sdlbox::TextureComponent::setTexture(Texture* t) {
         delete texture; // free old resources
     }
     texture = t;
+    repositionTexture(0, 0);
 }
 
 void sdlbox::TextureComponent::repositionTexture(int xOffset, int yOffset) {

@@ -118,10 +118,18 @@ class Pillar : public Component {
             }
             
             Bird* bird = Bird::getInstance();
+            SDL_Event e;
+            
             if (bird->collides(this)) {
-                SDL_Event e;
                 e.type = UserEvents::existingEventCode("GameOverEvent");
                 SDL_PushEvent(&e);
+            }
+            else if (bird->getX() > getX() + getWidth() && standingOnGround && !hasBeenPassed) {
+                // standingOnGround: ensure that only one of the two pillars
+                // registers an increase in score
+                e.type = UserEvents::existingEventCode("ScoreIncrementEvent");
+                SDL_PushEvent(&e);
+                hasBeenPassed = true;
             }
         }
     private:
@@ -129,6 +137,7 @@ class Pillar : public Component {
         static const int width = 50;
         int height;
         bool standingOnGround;
+        bool hasBeenPassed = false;
         static double hspeed; // class constant
 };
 
@@ -182,10 +191,12 @@ class PillarSpawnPoint : public Component {
 int main(int argc, char** argv) {
     SDLBox window("Flappy bird!", 640, 480);
 
-    // set up event code
+    // set up event codes (this is not strictly necessary)
     UserEvents::eventCode("GameOverEvent");
     UserEvents::eventCode("RestartGameEvent");
+    UserEvents::eventCode("ScoreIncrementEvent");
 
+    // add rooms (this is)
     Rooms::addRoom("Game");
     Rooms::addRoom("Game Over");
 
@@ -204,6 +215,8 @@ int main(int argc, char** argv) {
     window.ctrlWToQuit();
 
     double gravity = 0.2;
+    int score;
+
     auto initGame = [&](const SDL_Event &e) {
         window.goToRoom(Room("Game"));
         window.wipe();
@@ -212,12 +225,26 @@ int main(int argc, char** argv) {
         window.add(birb);
         
         window.add(new PillarSpawnPoint(window.getWidth() + 10, 100, 50));
+
+        score = 0;
+        
+        Label* lab = new Label("Score: 0");
+        lab->withPosition(620, 20, Layout::TOPRIGHT)->withReceivePosition(false);
+        
+        auto onScore = [&, lab](const SDL_Event &e) {
+            lab->setText("Score: " + to_string(++score));
+        };
+        lab->addEventListener(UserEvents::existingEventCode("ScoreIncrementEvent"), new EventListener(onScore));
+        
+        window.add(lab);
     };
 
     window.addEventListener(UserEvents::existingEventCode("RestartGameEvent"),
             new EventListener(initGame));
     
     window.addEventListener(SDL_KEYDOWN, new EventListener([&](const SDL_Event &e) {
+        return window.getActiveRoom() == "Game Over" && e.key.keysym.sym == SDLK_SPACE;
+    }, [&](const SDL_Event &e) {
         SDL_Event ev;
         if (window.getActiveRoom() == "Game Over" && e.key.keysym.sym == SDLK_SPACE) {
             ev.type = UserEvents::existingEventCode("RestartGameEvent");
