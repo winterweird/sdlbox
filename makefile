@@ -36,4 +36,4 @@ clean:
 	-rm obj/* bin/*
 
 init:
-	-mkdir src bin include lib obj
+	-mkdir src bin include lib obj res
