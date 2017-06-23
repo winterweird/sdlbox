@@ -35,4 +35,5 @@ $(LIBDIR)$(SDLBOX_LIB): $(OBJFILES)
 clean:
 	-rm obj/* bin/*
 
-init:	mkdir src bin include lib obj
+init:
+	-mkdir src bin include lib obj
