@@ -4,10 +4,10 @@
 #include <SDL2/SDL.h>
 #include <map>
 #include <mutex>
+#include <vector>
 #include <condition_variable>
 #include "EventListener.hpp"
-#include "Layout.hpp"
-
+#include "Layout.hpp" 
 namespace sdlbox {
     extern std::mutex mtx;
     extern std::condition_variable cv;
@@ -60,12 +60,13 @@ namespace sdlbox {
             virtual void step(); // method where each component updates itself
             
             void addEventListener(int eventType, EventListener* l);
+            void clearEventListeners(int eventType); // delete all listeners of a given type
         private:
             int x, y;
             int rPad = 0, lPad = 0, tPad = 0, bPad = 0;
             bool rcvPos = true;
 
-            std::map<int, EventListener*> eventListeners;
+            std::map<int, std::vector<EventListener*> > eventListeners;
     };
 }
 

@@ -54,6 +54,7 @@ namespace sdlbox {
             void draw() const;
 
             void addEventListener(int eventType, EventListener* l);
+            void clearEventListeners(int eventType);
             void handle(const SDL_Event & e);
             void step();
 
@@ -79,7 +80,7 @@ namespace sdlbox {
 
             std::map<Room, std::vector<Component*> > components;
             std::vector<Component*> destroyList; // for destruction each step
-            std::map<int, EventListener*> eventListeners;
+            std::map<int, std::vector<EventListener*> > eventListeners;
 
             // helper methods
             void init(std::string title);

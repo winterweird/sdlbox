@@ -223,11 +223,6 @@ int main(int argc, char** argv) {
             ev.type = UserEvents::existingEventCode("RestartGameEvent");
             SDL_PushEvent(&ev);
         }
-        else if (e.key.keysym.sym == SDLK_ESCAPE || (e.key.keysym.sym == SDLK_w
-                && e.key.keysym.mod & KMOD_CTRL)) {
-            ev.type = SDL_QUIT;
-            SDL_PushEvent(&ev);
-        }
     }));
 
     initGame(SDL_Event());

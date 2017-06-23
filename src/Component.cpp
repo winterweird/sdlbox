@@ -1,10 +1,11 @@
 #include "Component.hpp"
+#include <iostream> // testing
 
 std::mutex sdlbox::mtx;
 
 sdlbox::Component::~Component() {
     for (auto l : eventListeners) {
-        delete l.second;
+        clearEventListeners(l.first);
     }
 }
 
@@ -128,13 +129,22 @@ sdlbox::Component* sdlbox::Component::withPadding(int lPad, int rPad, int tPad, 
 void sdlbox::Component::handle(const SDL_Event &e) {
     auto l = eventListeners.find(e.type);
     if (l != eventListeners.end())
-        (l->second)->handle(e);
+        for (auto evl : l->second) {
+            evl->handle(e);
+        }
 }
 
 void sdlbox::Component::step() { }
 
 void sdlbox::Component::addEventListener(int eventType, EventListener* l) {
-    eventListeners[eventType] = l;
+    eventListeners[eventType].push_back(l);
+}
+
+void sdlbox::Component::clearEventListeners(int eventType) {
+    for (auto evl : eventListeners[eventType]) {
+        delete evl;
+    }
+    eventListeners[eventType].clear();
 }
 
 bool sdlbox::Component::receivePosition() const {

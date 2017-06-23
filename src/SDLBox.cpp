@@ -34,7 +34,7 @@ sdlbox::SDLBox::~SDLBox() {
 
     // destroy all event listeners
     for (auto l : eventListeners) {
-        delete l.second;
+        clearEventListeners(l.first);
     }
 
     // delete loaded fonts
@@ -242,7 +242,8 @@ void sdlbox::SDLBox::draw() const {
 void sdlbox::SDLBox::handle(const SDL_Event &e) {
     auto l = eventListeners.find(e.type);
     if (l != eventListeners.end())
-        (l->second)->handle(e);
+        for (auto evl : l->second)
+            evl->handle(e);
     
     auto roomComponents = getRoomComponents(activeRoom);
     for (auto c : roomComponents) {
@@ -263,7 +264,14 @@ void sdlbox::SDLBox::step() {
 }
 
 void sdlbox::SDLBox::addEventListener(int eventType, EventListener* l) {
-    eventListeners[eventType] = l;
+    eventListeners[eventType].push_back(l);
+}
+
+void sdlbox::SDLBox::clearEventListeners(int eventType) {
+    for (auto evl : eventListeners[eventType]) {
+        delete evl;
+    }
+    eventListeners[eventType].clear();
 }
 
 void sdlbox::SDLBox::repositionChildren() {
