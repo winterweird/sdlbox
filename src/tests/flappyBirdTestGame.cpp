@@ -10,8 +10,7 @@ class Bird : public Component {
             if (instance != NULL) {
                 throw runtime_error("Only one bird allowed at a time!");
             }
-            instance = this;
-            
+            instance = this; 
             addEventListener(SDL_KEYDOWN, new EventListener([this](const SDL_Event &e) {
                 if (e.key.keysym.sym == SDLK_SPACE && !justjumped) {
                     justjumped = true;
@@ -251,6 +250,8 @@ int main(int argc, char** argv) {
             SDL_PushEvent(&ev);
         }
     }));
+
+    // TODO: Add Z-level and sort components in room
 
     initGame(SDL_Event());
 

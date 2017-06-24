@@ -40,6 +40,8 @@ namespace sdlbox {
             virtual int getBottomPadding() const;
             virtual void getPadding(int &lPad, int &rPad, int &tPad, int &bPad) const;
 
+            int getZLevel() const;
+
             // add padding
             virtual Component* withVPad(int amount); // vertical (top + bottom)
             virtual Component* withHPad(int amount); // horizontal (left + right)
@@ -61,9 +63,13 @@ namespace sdlbox {
             
             void addEventListener(int eventType, EventListener* l);
             void clearEventListeners(int eventType); // delete all listeners of a given type
+
+            virtual bool operator<(Component* other) const; // order by Z level and otherwise determine draw order
+            virtual bool drawable() const;
         private:
             int x, y;
             int rPad = 0, lPad = 0, tPad = 0, bPad = 0;
+            int zlvl = 0;
             bool rcvPos = true;
 
             std::map<int, std::vector<EventListener*> > eventListeners;

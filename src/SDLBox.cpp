@@ -7,6 +7,7 @@
 #include <mutex>
 #include <cstdlib>
 #include <ctime>
+#include <set>
 
 using std::string;
 using std::runtime_error;
@@ -232,7 +233,18 @@ void sdlbox::SDLBox::draw() const {
     SDL_RenderClear(renderer);
 
     auto roomComponents = getRoomComponents(activeRoom);
+    
+    std::multiset<Component*> sortedComponents;
     for (auto c : roomComponents) {
+        if (c->drawable() && c->getX() > -c->getWidth() && c->getX() < this->getWidth() &&
+                c->getY() > -c->getHeight() && c->getY() < this->getHeight()) {
+
+            // component is visible on screen: add to sorted structure
+            sortedComponents.insert(c);
+        }
+    }
+    
+    for (auto c : sortedComponents) {
         c->draw();
     }
 

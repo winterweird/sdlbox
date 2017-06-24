@@ -147,6 +147,14 @@ void sdlbox::Component::clearEventListeners(int eventType) {
     eventListeners[eventType].clear();
 }
 
+bool sdlbox::Component::operator<(Component* other) const {
+    return zlvl < other->zlvl;
+}
+
+bool sdlbox::Component::drawable() const {
+    return true;
+}
+
 bool sdlbox::Component::receivePosition() const {
     return rcvPos;
 }
