@@ -1,7 +1,7 @@
 # generic crap makefile for C++ trash projects
 
 CC = g++
-CFLAGS = -g -Wall -std=c++11 -I$(INCDIR) -L$(LIBDIR)
+CFLAGS = -g -Wall -std=c++14 -I$(INCDIR) -L$(LIBDIR)
 LIBS = -lsdlbox -lSDL2 -lSDL2_ttf -lSDL2_image -lpthread
 
 SRCDIR = src/
