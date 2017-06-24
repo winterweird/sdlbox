@@ -1,5 +1,5 @@
 #include "Component.hpp"
-//#include "ComponentFactory.hpp"
+#include "ComponentFactory.hpp"
 #include <iostream> // testing
 
 std::mutex sdlbox::mtx;

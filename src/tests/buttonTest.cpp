@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
     auto callback = [&](const SDL_Event &e) {
         cout << "Heyyyy " << i++ << endl;
     };
-    window.add((new Button("Button text", callback))->withHPad(20));
+    window.add(ComponentFactory(new Button("Button text", callback)).hpad(20).create());
     
     window.add(new Label("And here is some more text"));
     

@@ -53,6 +53,18 @@ sdlbox::ComponentFactory& sdlbox::ComponentFactory::bpad(int amount) {
     return *this;
 }
 
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::hpad(int amount) {
+    lpad(amount);
+    rpad(amount);
+    return *this;
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::vpad(int amount) {
+    tpad(amount);
+    bpad(amount);
+    return *this;
+}
+
 sdlbox::ComponentFactory& sdlbox::ComponentFactory::padding(int vPad, int hPad) {
     tpad(vPad);
     bpad(vPad);

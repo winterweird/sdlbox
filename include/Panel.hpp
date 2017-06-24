@@ -19,6 +19,8 @@ namespace sdlbox {
 
             void draw() const override;
 
+            void commit() override;
+
             void handle(const SDL_Event &e) override;
             void step() override;
         private:

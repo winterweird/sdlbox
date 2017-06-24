@@ -19,7 +19,7 @@ void sdlbox::Panel::add(Component* c) {
     c->getPadding(lPad, rPad, tPad, bPad);
     
     ComponentFactory(c).position(this, nextX + lPad, nextY + tPad);
-    
+
     width = max(nextX + c->getWidth() + lPad + rPad, width);
     height = max(nextY + c->getHeight() + tPad + bPad, height);
 
@@ -45,6 +45,10 @@ void sdlbox::Panel::draw() const {
     for (auto c : components) {
         c->draw();
     }
+}
+
+void sdlbox::Panel::commit() {
+    repositionChildren();
 }
 
 void sdlbox::Panel::handle(const SDL_Event &e) {

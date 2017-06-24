@@ -16,6 +16,8 @@ namespace sdlbox {
             ComponentFactory& rpad(int amount);
             ComponentFactory& tpad(int amount);
             ComponentFactory& bpad(int amount);
+            ComponentFactory& hpad(int amount);
+            ComponentFactory& vpad(int amount);
             ComponentFactory& padding(int vPad, int hPad);
             ComponentFactory& padding(int lPad, int rPad, int tPad, int bPad);
             
