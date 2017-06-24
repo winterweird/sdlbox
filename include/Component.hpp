@@ -14,6 +14,7 @@ namespace sdlbox {
     extern bool isDrawing;
     
     class Component {
+        friend class ComponentFactory;
         public:
             virtual ~Component();
             
@@ -27,27 +28,38 @@ namespace sdlbox {
 
             virtual bool collides(Component* c) const; // check collision with other component
 
+            [[deprecated]]
             virtual Component* withPosition(int x, int y, int anchor=Layout::TOPLEFT);
+            [[deprecated]]
             virtual Component* withPosition(Component* relative, int x, int y, int anchor=Layout::TOPLEFT);
 
+            [[deprecated]]
             virtual Component* withReceivePosition(bool val);
 
-            virtual int getVerticalPadding() const;
-            virtual int getHorizontalPadding() const;
-            virtual int getLeftPadding() const;
-            virtual int getRightPadding() const;
-            virtual int getTopPadding() const;
-            virtual int getBottomPadding() const;
-            virtual void getPadding(int &lPad, int &rPad, int &tPad, int &bPad) const;
+            int getVerticalPadding() const;
+            int getHorizontalPadding() const;
+            int getLeftPadding() const;
+            int getRightPadding() const;
+            int getTopPadding() const;
+            int getBottomPadding() const;
+            void getPadding(int &lPad, int &rPad, int &tPad, int &bPad) const;
 
             // add padding
+            [[deprecated]]
             virtual Component* withVPad(int amount); // vertical (top + bottom)
+            [[deprecated]]
             virtual Component* withHPad(int amount); // horizontal (left + right)
+            [[deprecated]]
             virtual Component* withLPad(int amount); // left
+            [[deprecated]]
             virtual Component* withRPad(int amount); // right
+            [[deprecated]]
             virtual Component* withTPad(int amount); // top
+            [[deprecated]]
             virtual Component* withBPad(int amount); // bottom
+            [[deprecated]]
             virtual Component* withPadding(int vPad, int hPad);
+            [[deprecated]]
             virtual Component* withPadding(int lPad, int rPad, int tPad, int bPad);
 
             // whether or not the specified component should receive its
