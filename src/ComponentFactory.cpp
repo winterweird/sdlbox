@@ -1,4 +1,5 @@
 #include "ComponentFactory.hpp"
+#include <iostream> // testing
 
 sdlbox::ComponentFactory::ComponentFactory(Component *c) : component(c) { }
 
@@ -22,11 +23,50 @@ sdlbox::ComponentFactory& sdlbox::ComponentFactory::position(int x, int y, int a
     
     component->x = x;
     component->y = y;
+    
+    autoposition(false);
+    component->commit();
     return *this;
 }
 
 sdlbox::ComponentFactory& sdlbox::ComponentFactory::position(Component* relative, int x, int y, int anchor) {
     return position(relative->getX() + x, relative->getY() + y, anchor);
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::lpad(int amount) {
+    component->lPad = amount;
+    return *this;
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::rpad(int amount) {
+    component->rPad = amount;
+    return *this;
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::tpad(int amount) {
+    component->tPad = amount;
+    return *this;
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::bpad(int amount) {
+    component->bPad = amount;
+    return *this;
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::padding(int vPad, int hPad) {
+    tpad(vPad);
+    bpad(vPad);
+    lpad(hPad);
+    rpad(hPad);
+    return *this;
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::padding(int lPad, int rPad, int tPad, int bPad) {
+    lpad(lPad);
+    rpad(rPad);
+    tpad(tPad);
+    bpad(bPad);
+    return *this;
 }
 
 sdlbox::ComponentFactory& sdlbox::ComponentFactory::zLevel(int level) {

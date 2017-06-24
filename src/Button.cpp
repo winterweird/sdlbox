@@ -1,6 +1,7 @@
 #include "Button.hpp"
 #include "GraphicsHelper.hpp"
 #include "EventListener.hpp"
+#include "ComponentFactory.hpp"
 #include <iostream> // testing
 
 sdlbox::Button::Button(std::string text, std::function<void (const SDL_Event&)> callback) : Label(text) {
@@ -36,14 +37,7 @@ void sdlbox::Button::draw() const {
     Label::draw();
 }
 
-sdlbox::Component* sdlbox::Button::withPosition(int x, int y, int anchor) {
-    Label::withPosition(x, y, anchor);
+void sdlbox::Button::commit() {
+    Label::commit();
     repositionTexture(Label::getHeight()/4, Label::getHeight()/4);
-    return this;
-}
-
-sdlbox::Component* sdlbox::Button::withPosition(Component* relative, int x, int y, int anchor) {
-    Label::withPosition(relative, x, y, anchor);
-    repositionTexture(Label::getHeight()/4, Label::getHeight()/4);
-    return this;
 }

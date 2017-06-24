@@ -31,7 +31,8 @@ namespace sdlbox {
             [[deprecated]]
             virtual Component* withPosition(int x, int y, int anchor=Layout::TOPLEFT);
             [[deprecated]]
-            virtual Component* withPosition(Component* relative, int x, int y, int anchor=Layout::TOPLEFT);
+            virtual Component* withPosition(Component* relative, int x, int y,
+                    int anchor=Layout::TOPLEFT);
 
             [[deprecated]]
             virtual Component* withReceivePosition(bool val);
@@ -72,6 +73,9 @@ namespace sdlbox {
 
             virtual void handle(const SDL_Event &e);
             virtual void step(); // method where each component updates itself
+
+            // propagate information added to base class down the subclasses
+            virtual void commit();
             
             void addEventListener(int eventType, EventListener* l);
             void clearEventListeners(int eventType); // delete all listeners of a given type

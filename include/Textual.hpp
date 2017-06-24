@@ -28,8 +28,8 @@ namespace sdlbox {
             bool textIsBlended() const;
 
             Texture* createTexture() const;
+            void commit() override; // use the text set previously to create a texture
         protected:
-            void commit(); // use the text set previously to create a texture
             virtual void setText(const std::string &font, int size, const std::string &text, Color* fg, Color* bg, bool blended);
         private:
             std::string msg;

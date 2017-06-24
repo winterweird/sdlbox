@@ -1,4 +1,5 @@
 #include "SDLBox.hpp"
+#include "ComponentFactory.hpp"
 #include "GraphicsHelper.hpp"
 #include "UserEvents.hpp"
 #include <SDL2/SDL_ttf.h>
@@ -190,7 +191,7 @@ void sdlbox::SDLBox::add(Component* c) {
     c->getPadding(lPad, rPad, tPad, bPad);
     
     if (c->receivePosition()) {
-        c->withPosition(nextX + lPad, nextY + tPad);
+        ComponentFactory(c).position(nextX + lPad, nextY + tPad).autoposition();
         if (orientation == Layout::VERTICAL) {
             nextY += c->getHeight() + tPad + bPad;
         }
@@ -300,7 +301,7 @@ void sdlbox::SDLBox::repositionChildren() {
         int lPad, rPad, tPad, bPad;
         c->getPadding(lPad, rPad, tPad, bPad);
         
-        c->withPosition(nx + lPad, ny + tPad);
+        ComponentFactory(c).position(nx + lPad, ny + tPad).autoposition();
         
         if (orientation == Layout::VERTICAL) {
             ny += c->getHeight() + tPad + bPad;

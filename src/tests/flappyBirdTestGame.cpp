@@ -8,8 +8,7 @@ class Bird : public Component {
     public:
         Bird(double x, double y, double* gravity) : x(x), y(y), gravity(gravity) {
             if (instance != NULL) {
-                throw runtime_error("Only one bird allowed at a time!");
-            }
+                throw runtime_error("Only one bird allowed at a time!"); }
             instance = this; 
             addEventListener(SDL_KEYDOWN, new EventListener([this](const SDL_Event &e) {
                 if (e.key.keysym.sym == SDLK_SPACE && !justjumped) {
@@ -46,8 +45,7 @@ class Bird : public Component {
         }
         
         void draw() const override {
-            SDL_Rect area;
-            area.w = width;
+            SDL_Rect area; area.w = width;
             area.h = height;
             area.x = x;
             area.y = y;
@@ -198,21 +196,26 @@ int main(int argc, char** argv) {
     // add rooms (this is)
     Rooms::addRoom("Game");
     Rooms::addRoom("Game Over");
-
+    
     // setup game over screen
     window.goToRoom(Room("Game Over"));
-    window.add((new Label("GAME OVER"))->withPosition(320, 240, Layout::CENTER)->withReceivePosition(false));
-    window.add((new Label("(press space to play again)"))->withPosition(320, 270, Layout::CENTER)->withReceivePosition(false));
 
+    window.add(ComponentFactory(new Label("GAME OVER"))
+            .position(320, 240, Layout::CENTER)
+            .create());
+    window.add(ComponentFactory(new Label("(Press space to play again)"))
+            .position(320, 270, Layout::CENTER)
+            .create());
+    
     window.addEventListener(UserEvents::existingEventCode("GameOverEvent"),
             new EventListener([&](const SDL_Event &e) {
                 return window.getActiveRoom() == "Game";
             }, [&](const SDL_Event &e) {
                 window.goToRoom(Room("Game Over"));
             }));
-
+    
     window.ctrlWToQuit();
-
+    
     double gravity = 0.2;
     int score;
 
@@ -226,9 +229,10 @@ int main(int argc, char** argv) {
         window.add(new PillarSpawnPoint(window.getWidth() + 10, 100, 50));
 
         score = 0;
-        
-        Label* lab = new Label("Score: 0");
-        lab->withPosition(620, 20, Layout::TOPRIGHT)->withReceivePosition(false);
+
+        Label* lab = (Label*)ComponentFactory(new Label("Score: 0"))
+            .position(620, 20, Layout::TOPRIGHT)
+            .create();
         
         auto onScore = [&, lab](const SDL_Event &e) {
             lab->setText("Score: " + to_string(++score));
@@ -250,9 +254,7 @@ int main(int argc, char** argv) {
             SDL_PushEvent(&ev);
         }
     }));
-
-    // TODO: Add Z-level and sort components in room
-
+    
     initGame(SDL_Event());
 
     mainloop(&window);

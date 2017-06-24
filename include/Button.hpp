@@ -18,9 +18,8 @@ namespace sdlbox {
 
             int getWidth() const override;
             int getHeight() const override;
-
-            Component* withPosition(int x, int y, int anchor=Layout::TOPLEFT) override;
-            Component* withPosition(Component* relative, int x, int y, int anchor=Layout::TOPLEFT) override;
+            
+            void commit() override;
             
             void draw() const override;
         private:

@@ -11,6 +11,8 @@ namespace sdlbox {
             Label(std::string text, bool blended=false); // creates black text
             Label(std::string text, const Color &color, bool blended=false);
             Label(std::string text, const Color &fgColor, const Color &bgColor); // shaded text
+            
+//            void commit() override;
         protected:
             void setText(const std::string &font, int size, const std::string &text, Color* fg, Color* bg, bool blended) override;
         private:

@@ -1,6 +1,7 @@
 #include "Textual.hpp"
 #include "GraphicsHelper.hpp"
 #include "SDLBox.hpp"
+#include <iostream> // testing
 
 sdlbox::Textual::~Textual() {
     if (this->fgColor != NULL)
@@ -92,7 +93,8 @@ void sdlbox::Textual::setText(const std::string &font, int size, const std::stri
 
 void sdlbox::Textual::commit() {
     // assumes text is set and such and such
-    setTexture(createTexture());
+    TextureComponent::setTexture(createTexture());
+    TextureComponent::commit();
     
     SDLBox::getInstance()->repositionChildren(); // update change in UI
 }

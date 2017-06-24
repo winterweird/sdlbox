@@ -1,4 +1,5 @@
 #include "Component.hpp"
+//#include "ComponentFactory.hpp"
 #include <iostream> // testing
 
 std::mutex sdlbox::mtx;
@@ -157,6 +158,8 @@ void sdlbox::Component::handle(const SDL_Event &e) {
 }
 
 void sdlbox::Component::step() { }
+
+void sdlbox::Component::commit() { }
 
 void sdlbox::Component::addEventListener(int eventType, EventListener* l) {
     eventListeners[eventType].push_back(l);

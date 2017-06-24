@@ -1,5 +1,6 @@
 #include "Panel.hpp"
 #include "Layout.hpp"
+#include "ComponentFactory.hpp"
 #include <iostream> // testing
 #include <algorithm> // std::max
 
@@ -17,7 +18,7 @@ void sdlbox::Panel::add(Component* c) {
     int lPad, rPad, tPad, bPad;
     c->getPadding(lPad, rPad, tPad, bPad);
     
-    c->withPosition(this, nextX + lPad, nextY + tPad);
+    ComponentFactory(c).position(this, nextX + lPad, nextY + tPad);
     
     width = max(nextX + c->getWidth() + lPad + rPad, width);
     height = max(nextY + c->getHeight() + tPad + bPad, height);
@@ -38,12 +39,6 @@ int sdlbox::Panel::getWidth() const {
 
 int sdlbox::Panel::getHeight() const {
     return height;
-}
-
-sdlbox::Component* sdlbox::Panel::withPosition(int x, int y, int anchor) {
-    Component::withPosition(x, y, anchor);
-    repositionChildren();
-    return this;
 }
 
 void sdlbox::Panel::draw() const {
@@ -76,7 +71,8 @@ void sdlbox::Panel::repositionChildren() {
 
         int lPad, rPad, tPad, bPad;
         c->getPadding(lPad, rPad, tPad, bPad);
-        c->withPosition(this, nx + lPad, ny + tPad);
+        ComponentFactory(c).position(this, nx + lPad, ny + tPad);
+        
         if (orientation == Layout::VERTICAL) {
             ny += c->getHeight() + tPad + bPad;
         }

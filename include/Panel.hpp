@@ -17,8 +17,6 @@ namespace sdlbox {
             int getWidth() const override;
             int getHeight() const override;
 
-            Component* withPosition(int x, int y, int anchor=Layout::TOPLEFT) override;
-            
             void draw() const override;
 
             void handle(const SDL_Event &e) override;

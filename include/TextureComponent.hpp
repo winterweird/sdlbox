@@ -16,7 +16,7 @@ namespace sdlbox {
             
             void draw() const override;
 
-            Component* withPosition(int x, int y, int anchor=Layout::TOPLEFT) override;
+            void commit() override;
         protected:
             void setTexture(Texture* t);
             void repositionTexture(int xOffset, int yOffset);
