@@ -32,4 +32,4 @@ You're free to reuse and modify any code in this project. You may also add more 
 
 ## API overview and documentation
 
-... coming soon.
+The API documentation is far from finished, but a preliminary [overview](docs/OVERVIEW.md) is currently available, and is pointing to each of the API pages which will be updated as soon as I get to it.
