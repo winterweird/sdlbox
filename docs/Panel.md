@@ -9,7 +9,7 @@
 * [`Panel(int orientation)`](#panelint-orientation)
 * [`~Panel()`](#panel)
 
-* [`void add(Component* c)`](#addcomponent-c)
+* [`void add(Component* c)`](#void-addcomponent-c)
 
 * [`int getWidth()`](#int-getwidth)` const override`
 * [`int getHeight()`](#int-getheight)` const override`
@@ -32,7 +32,7 @@ It is responsible for drawing all the Components and executing their step
 methods, as well as updating their positions when outside changes occur (see
 [commit](#void-commit)).
 
-It shares a similar ([albeit distinct](#SDLBox.md#design-decisions)) interface
+It shares a similar ([albeit distinct](SDLBox.md#design-decisions)) interface
 with SDLBox, which is also a container of Components.
 
 ## Public methods
