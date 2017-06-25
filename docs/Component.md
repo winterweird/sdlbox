@@ -53,6 +53,8 @@ The Component is the base class which any class intended to be put in a containe
 
 The specific attributes and contents of each Component are generally specified in the subclassing Component's constructor. For more fine-grained control over the Component's attributes, have a look at [the ComponentFactory class](ComponentFactory.md)
 
+The Component class contains several deprecated methods which are not documented here.
+
 ## Public methods
 
 ### `~Component`

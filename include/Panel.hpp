@@ -7,8 +7,6 @@
 namespace sdlbox {
     class Panel : public Component {
         public:
-            using Component::withPosition;
-            
             Panel(int orientation);
             ~Panel();
             
