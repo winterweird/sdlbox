@@ -214,7 +214,8 @@ int main(int argc, char** argv) {
                 window.goToRoom(Room("Game Over"));
             }));
     
-    window.ctrlWToQuit();
+    window.addQuitButton(SDLK_w, KMOD_CTRL);
+    window.addQuitButton(SDLK_ESCAPE, 0);
     
     double gravity = 0.2;
     int score;

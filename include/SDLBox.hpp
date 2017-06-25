@@ -19,6 +19,9 @@ namespace sdlbox {
 
             // add event listeners which help handling things
             void continuallyFitToContent();
+            void addQuitButton(int keycode, int kmod);
+            
+            [[deprecated]]
             void ctrlWToQuit();
             
             // freeze size

@@ -2,6 +2,7 @@
 #include "ComponentFactory.hpp"
 #include "GraphicsHelper.hpp"
 #include "UserEvents.hpp"
+#include "sdlbox.hpp" // dispatchEvent
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <algorithm> // std::max
@@ -69,6 +70,14 @@ void sdlbox::SDLBox::continuallyFitToContent() {
         new EventListener([this](const SDL_Event &e) {
             this->repositionChildren();
         }));
+}
+
+void sdlbox::SDLBox::addQuitButton(int keycode, int kmod) {
+    this->addEventListener(SDL_KEYDOWN, new EventListener([=](const SDL_Event &e) {
+        if (e.key.keysym.sym == keycode && (kmod == 0 || e.key.keysym.mod & kmod)) {
+            dispatchEvent(SDL_QUIT);
+        }
+    }));
 }
 
 void sdlbox::SDLBox::ctrlWToQuit() {
