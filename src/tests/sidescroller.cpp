@@ -28,45 +28,48 @@ class Runner : public Component {
             const Uint8* keys = SDL_GetKeyboardState(NULL);
             if (keys[SDL_SCANCODE_W]) {
                 if (grounded) {
-                    vspeed = -10;
+                    vspeed = -vspeedBoost;
                     grounded = false;
-                    cout << "changed to ungrounded! " << vspeed << endl;
                 }
             }
             if (keys[SDL_SCANCODE_S]) {
                 if (grounded) {
-                    cout << "hey" << endl;
+                    // TODO: idk
                 }
             }
             if (keys[SDL_SCANCODE_A]) {
-                goalX = getX() - hspeed;
+                goalX -= hspeed;
             }
             if (keys[SDL_SCANCODE_D]) {
-                goalX = getX() + hspeed;
+                goalX += hspeed;
             }
             
             if (!grounded) {
                 // update y position
                 // On a side note, magic numbers are bad, and 250 is where the
                 // "floor" is (or, 250 + height, really)
-                double goalY = min(250.0, getY() + vOvershoot + vspeed);
-                cout << "goalY is now " << goalY << endl;
-                cout << "this is the result of " << getY() << " + " << vOvershoot << " + " << vspeed << endl;
-                vOvershoot =  goalY - (int)round(goalY);
+
+                goalY += vErr + vspeed;
                 
-                if (goalY == 250.0) {
+                // it doesn't look like this line makes much of a difference, but meh
+                vErr = goalY - (int)round(goalY); // could also use some cmath function or w/e
+                
+                if (goalY >= 250.0) {
                     grounded = true;
                     vspeed = 0;
-                    vOvershoot = 0;
+                    vErr = 0;
                 }
                 else {
                     vspeed += gravity;
                 }
 
             }
-            
-            ComponentFactory(this).position((int)round(goalX), (int)round(goalY));
-            cout << "new pos: " << getX() << ", " << getY() << endl;
+
+            // normalize goals
+            goalX = min(max(0.0, goalX), 800.0-getWidth());
+            goalY = min(250.0, goalY);
+
+            ComponentFactory(this).position(round(goalX), round(goalY));
         }
     private:
         // NOTE: naïve approach to positioning and speed. What I used in Flappy
@@ -86,9 +89,10 @@ class Runner : public Component {
         // variable declarations.
         static const int hspeed = 2;
         constexpr static const double gravity = 0.2;
-        double vOvershoot = 0;
+        double vErr = 0;
         bool grounded = true;
         double vspeed = 0;
+        constexpr static const double vspeedBoost = 6.0;
 };
 
 int main(int argc, char** argv) {
