@@ -8,6 +8,12 @@
 std::condition_variable sdlbox::cv;
 bool sdlbox::isDrawing = false;
 
+void sdlbox::dispatchEvent(int eventType) {
+    SDL_Event e;
+    e.type = eventType;
+    SDL_PushEvent(&e);
+}
+
 void sdlbox::mainloop(sdlbox::SDLBox* window) {
     SDL_Event e;
     std::atomic<bool> running(true);

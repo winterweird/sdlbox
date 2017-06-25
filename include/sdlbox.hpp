@@ -16,6 +16,8 @@
 #include "Rooms.hpp"
 
 namespace sdlbox {
+    // for creating events where we only care that "this happened"
+    void dispatchEvent(int eventType);
     void mainloop(SDLBox* window);
 }
 
