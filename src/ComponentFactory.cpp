@@ -9,23 +9,10 @@ sdlbox::ComponentFactory& sdlbox::ComponentFactory::autoposition(bool state) {
 }
 
 sdlbox::ComponentFactory& sdlbox::ComponentFactory::position(double x, double y, int anchor) {
-    if (anchor < -1);
-    else if (anchor > 1)
-        x -= component->getWidth();
-    else
-        x -= component->getWidth()/2.0;
-    
-    if ((anchor + 2) % 3 == 0);
-    else if ((anchor - 2) % 3 == 0)
-        y -= component->getHeight();
-    else
-        y -= component->getHeight()/2.0;
-    
-    component->x = x;
-    component->y = y;
+    positionX(x, anchor);
+    positionY(y, anchor);
     
     autoposition(false);
-    component->commit();
     return *this;
 }
 
@@ -36,6 +23,30 @@ sdlbox::ComponentFactory& sdlbox::ComponentFactory::position(Component* relative
 sdlbox::ComponentFactory& sdlbox::ComponentFactory::updatePosition(double dx, double dy) {
     component->x += dx;
     component->y += dy;
+    component->commit();
+    return *this;
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::positionX(double x, int anchor) {
+    if (anchor < -1);
+    else if (anchor > 1)
+        x -= component->getWidth();
+    else
+        x -= component->getWidth()/2.0;
+
+    component->x = x;
+    component->commit();
+    return *this;
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::positionY(double y, int anchor) {
+    if ((anchor + 2) % 3 == 0);
+    else if ((anchor - 2) % 3 == 0)
+        y -= component->getHeight();
+    else
+        y -= component->getHeight()/2.0;
+
+    component->y = y;
     component->commit();
     return *this;
 }
