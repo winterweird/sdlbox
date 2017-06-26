@@ -9,8 +9,9 @@ namespace sdlbox {
             ComponentFactory(Component* c);
 
             ComponentFactory& autoposition(bool state=true);
-            ComponentFactory& position(int x, int y, int anchor=Layout::TOPLEFT);
-            ComponentFactory& position(Component* relative, int x, int y, int anchor=Layout::TOPLEFT);
+            ComponentFactory& position(double x, double y, int anchor=Layout::TOPLEFT);
+            ComponentFactory& position(Component* relative, double x, double y, int anchor=Layout::TOPLEFT);
+            ComponentFactory& updatePosition(double dx, double dy);
 
             ComponentFactory& lpad(int amount);
             ComponentFactory& rpad(int amount);
