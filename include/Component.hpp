@@ -83,7 +83,7 @@ namespace sdlbox {
             virtual bool operator<(Component* other) const; // order by Z level and otherwise determine draw order
             virtual bool drawable() const;
         private:
-            int x, y;
+            double x, y;
             int rPad = 0, lPad = 0, tPad = 0, bPad = 0;
             int zlvl = 0;
             bool rcvPos = true;
