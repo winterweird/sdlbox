@@ -38,29 +38,17 @@ class GameObject : public Component {
                 hSpeed = max(hSpeed - amount, goal);
         }
 
-        virtual void cap() {}
-        
-        void cap(double minX, double maxX, double minY, double maxY) {
-            xPos = max(minX, min(xPos, maxX));
-            yPos = max(minY, min(yPos, maxY));
+        double getHSpeed() const {
+            return hSpeed;
         }
 
-        void step() override {
-            // subclass behavior goes here
-            
-            // this might become troublesome
-            xPos += hSpeed;
-            yPos += vSpeed;
-
-            cap();
-            
-            ComponentFactory(this).position(round(xPos), round(yPos));
+        double getVSpeed() const {
+            return vSpeed;
         }
         
     private:
         Color color;
 
-        double xPos, yPos; // keep track of actual position
         double vSpeed, hSpeed; // init from subclass constr
 };
 
@@ -73,15 +61,6 @@ class Runner : public GameObject {
         }
         int getHeight() const override {
             return 40;
-        }
-
-        void cap() override {
-            GameObject::cap(0, 800-getWidth(), 0, 250);
-            
-            if (getY() == 250) {
-                grounded = true;
-                vAccel(0);
-            }
         }
 
         void step() override {
@@ -111,25 +90,17 @@ class Runner : public GameObject {
                 vAccel(100, gravity);
             }
 
-            GameObject::step();
+            ComponentFactory cf(this);
+            cf.updatePosition(getHSpeed(), getVSpeed());
+            if (getX() < 0)
+                cf.positionX(0);
+            else if (getX() > 800 - getHeight())
+                cf.positionX(800 - getHeight());
+            
+            if (getY() > 250)
+                cf.positionY(250);
         }
     private:
-        // NOTE: naïve approach to positioning and speed. What I used in Flappy
-        // Bird was better (but more complicated, and I'm not trying to prove
-        // anything right now).
-        // I could also build a "PrecisePositionComponent" into the library,
-        // anticipating that working with double positions will be a common use
-        // case, and work with doubles behind the scenes. Exactly how
-        // repositioning will happen might prove a challenge given my current
-        // ComponentFactory approach, though, unless I include a separate API
-        // for updating positions and such and use that instead. All in all, it
-        // seems complicated, and generally easier to do this on a case-by-case
-        // basis unless otherwise proven. (Although this might also be me
-        // refusing to acknowledge a weakness in my design, I confess.)
-        //
-        // I really need to stop writing novels in comments concerning single
-        // variable declarations.
-        static const int hspeed = 2;
         constexpr static const double gravity = 0.2;
         
         bool grounded = true;
