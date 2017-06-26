@@ -8,15 +8,16 @@ sdlbox::TextureComponent::~TextureComponent() {
 }
 
 int sdlbox::TextureComponent::getWidth() const {
-    return texture->getWidth();
+    return texture != NULL ? texture->getWidth() : 0;
 }
 
 int sdlbox::TextureComponent::getHeight() const {
-    return texture->getHeight();
+    return texture != NULL ? texture->getHeight() : 0;
 }
 
 void sdlbox::TextureComponent::draw() const {
-    texture->draw();
+    if (texture != NULL)
+        texture->draw();
 }
 
 void sdlbox::TextureComponent::setTexture(Texture* t) {
