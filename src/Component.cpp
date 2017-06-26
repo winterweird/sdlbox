@@ -11,11 +11,11 @@ sdlbox::Component::~Component() {
 }
 
 int sdlbox::Component::getX() const {
-    return x;
+    return (int)round(x);
 }
 
 int sdlbox::Component::getY() const {
-    return y;
+    return (int)round(y);
 }
 
 SDL_Rect sdlbox::Component::getRect() const {

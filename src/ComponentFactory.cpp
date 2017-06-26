@@ -8,18 +8,18 @@ sdlbox::ComponentFactory& sdlbox::ComponentFactory::autoposition(bool state) {
     return *this;
 }
 
-sdlbox::ComponentFactory& sdlbox::ComponentFactory::position(int x, int y, int anchor) {
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::position(double x, double y, int anchor) {
     if (anchor < -1);
     else if (anchor > 1)
         x -= component->getWidth();
     else
-        x -= component->getWidth()/2;
+        x -= component->getWidth()/2.0;
     
     if ((anchor + 2) % 3 == 0);
     else if ((anchor - 2) % 3 == 0)
         y -= component->getHeight();
     else
-        y -= component->getHeight()/2;
+        y -= component->getHeight()/2.0;
     
     component->x = x;
     component->y = y;
@@ -29,8 +29,15 @@ sdlbox::ComponentFactory& sdlbox::ComponentFactory::position(int x, int y, int a
     return *this;
 }
 
-sdlbox::ComponentFactory& sdlbox::ComponentFactory::position(Component* relative, int x, int y, int anchor) {
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::position(Component* relative, double x, double y, int anchor) {
     return position(relative->getX() + x, relative->getY() + y, anchor);
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::updatePosition(double dx, double dy) {
+    component->x += dx;
+    component->y += dy;
+    component->commit();
+    return *this;
 }
 
 sdlbox::ComponentFactory& sdlbox::ComponentFactory::lpad(int amount) {
