@@ -92,14 +92,10 @@ class Runner : public GameObject {
 
             ComponentFactory cf(this);
             cf.updateX(getHSpeed(), 0, 800-getWidth());
-            cf.updateY(getVSpeed(), 0, 250);
-            
-            // TODO: add "oncap" method to updateX and updateY
-            if (getY() == 250) {
-//                cf.positionY(250);
-                grounded = true;
-                vAccel(0);
-            }
+            cf.updateY(getVSpeed(), 0, 250, [this]{
+                this->grounded = true;
+                this->vAccel(0);
+            });
         }
     private:
         constexpr static const double gravity = 0.2;
@@ -121,10 +117,9 @@ class Obstacle : public GameObject {
         }
 
         void step() override {
-            ComponentFactory(this).updatePosition(getHSpeed(), getVSpeed());
-            if (getX() < -getWidth()) {
+            ComponentFactory(this).updateX(getHSpeed(), 0-getWidth(), 800 + 100, [this]{
                 SDLBox::getInstance()->scheduleDestruct(this);
-            }
+            });
         }
     private:
         int width, height;
