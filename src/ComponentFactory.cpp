@@ -73,11 +73,14 @@ sdlbox::ComponentFactory& sdlbox::ComponentFactory::positionX(double x, int anch
 }
 
 sdlbox::ComponentFactory& sdlbox::ComponentFactory::positionY(double y, int anchor) {
-    if ((anchor + 2) % 3 == 0);
-    else if ((anchor - 2) % 3 == 0)
+    if ((anchor + 2) % 3 == 0) {
+    }
+    else if ((anchor - 2) % 3 == 0) {
         y -= component->getHeight();
-    else
+    }
+    else {
         y -= component->getHeight()/2.0;
+    }
 
     component->y = y;
     component->commit();

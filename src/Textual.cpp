@@ -95,8 +95,7 @@ void sdlbox::Textual::commit() {
     // assumes text is set and such and such
     TextureComponent::setTexture(createTexture());
     TextureComponent::commit();
-    
-    SDLBox::getInstance()->repositionChildren(); // update change in UI
+    SDLBox::getInstance()->scheduleReposition(); // update change in UI
 }
 
 sdlbox::Texture* sdlbox::Textual::createTexture() const {

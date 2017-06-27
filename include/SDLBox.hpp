@@ -54,14 +54,14 @@ namespace sdlbox {
             void add(Component* c);
             void scheduleDestruct(Component* c);
 
+            void scheduleReposition(); // #howtofixshit
+
             void draw() const;
 
             void addEventListener(int eventType, EventListener* l);
             void clearEventListeners(int eventType);
             void handle(const SDL_Event & e);
             void step();
-
-            void repositionChildren();
 
             static SDLBox* getInstance();
             SDL_Renderer* getRenderer() const;
@@ -72,6 +72,8 @@ namespace sdlbox {
             bool autoResizeWidth = false, autoResizeHeight = false;
             int orientation = Layout::VERTICAL;
             int FPS = 60;
+
+            bool repositioningScheduled = false; // #howtofixshit
 
             bool roomSupport = true;
             Room activeRoom;
@@ -88,6 +90,7 @@ namespace sdlbox {
             // helper methods
             void init(std::string title);
             void resize(int w, int h);
+            void repositionChildren();
             std::vector<Component*> getRoomComponents(const Room &room) const;
     };
 }

@@ -13,7 +13,7 @@ LIBDIR = lib/
 SDLBOX_LIB = libsdlbox.a
 
 OUTFILE = $(BINDIR)main
-OUTSRCFILE = $(SRCDIR)tests/sidescroller.cpp
+OUTSRCFILE = $(SRCDIR)tests/labelTest.cpp
 
 OBJFILES_NODIR = sdlbox SDLBox Font Color GraphicsHelper Label Texture Component Panel Button EventListener TextureComponent UserEvents Textual VolatileLabel Room Rooms ComponentFactory
 

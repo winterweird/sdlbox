@@ -239,6 +239,11 @@ void sdlbox::SDLBox::scheduleDestruct(Component* c) {
     }
 }
 
+void sdlbox::SDLBox::scheduleReposition() {
+    // returns whether repositioning is currently scheduled to happen
+    repositioningScheduled = true;
+}
+
 void sdlbox::SDLBox::draw() const {
     SDL_RenderClear(renderer);
 
@@ -298,6 +303,11 @@ void sdlbox::SDLBox::step() {
             }
         }
     }
+
+    if (repositioningScheduled) {
+        repositionChildren();
+    }
+    repositioningScheduled = false;
 }
 
 void sdlbox::SDLBox::addEventListener(int eventType, EventListener* l) {
