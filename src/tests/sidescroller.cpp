@@ -7,7 +7,7 @@ using namespace sdlbox;
 
 class GameObject : public Component {
     public:
-        GameObject(int x, int y, const Color &color, double vSpeed, double hSpeed) : color(color), xPos(x), yPos(y), vSpeed(vSpeed), hSpeed(hSpeed) {
+        GameObject(int x, int y, const Color &color, double vSpeed, double hSpeed) : color(color), vSpeed(vSpeed), hSpeed(hSpeed) {
             ComponentFactory(this).position(x, y);
         }
 
@@ -94,11 +94,14 @@ class Runner : public GameObject {
             cf.updatePosition(getHSpeed(), getVSpeed());
             if (getX() < 0)
                 cf.positionX(0);
-            else if (getX() > 800 - getHeight())
-                cf.positionX(800 - getHeight());
+            else if (getX() > 800 - getWidth())
+                cf.positionX(800 - getWidth());
             
-            if (getY() > 250)
+            if (getY() > 250) {
                 cf.positionY(250);
+                grounded = true;
+                vAccel(0);
+            }
         }
     private:
         constexpr static const double gravity = 0.2;
@@ -120,7 +123,7 @@ class Obstacle : public GameObject {
         }
 
         void step() override {
-            GameObject::step();
+            ComponentFactory(this).updatePosition(getHSpeed(), getVSpeed());
             if (getX() < -getWidth()) {
                 SDLBox::getInstance()->scheduleDestruct(this);
             }
