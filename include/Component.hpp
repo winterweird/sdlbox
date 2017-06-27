@@ -26,6 +26,7 @@ namespace sdlbox {
 
             SDL_Rect getRect() const;
 
+            virtual bool collidable() const;
             virtual bool collides(Component* c) const; // check collision with other component
 
             [[deprecated]]

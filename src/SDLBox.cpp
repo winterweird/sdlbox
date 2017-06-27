@@ -280,8 +280,23 @@ void sdlbox::SDLBox::step() {
     destroyList.clear();
     
     auto roomComponents = getRoomComponents(activeRoom);
+    auto collidables = roomComponents; collidables.clear();
     for (auto c : roomComponents) {
         c->step();
+        if (c->collidable())
+            collidables.push_back(c);
+    }
+    
+    for (auto c = collidables.begin(); c != collidables.end(); c++) {
+        for (auto d = c+1; d != collidables.end(); d++) {
+            if ((*c)->collides(*d)) {
+                SDL_Event e;
+                e.type = UserEvents::existingEventCode("COLLISION_EVENT");
+                e.user.data1 = *c;
+                e.user.data2 = *d;
+                SDL_PushEvent(&e);
+            }
+        }
     }
 }
 
@@ -393,6 +408,7 @@ void sdlbox::SDLBox::init(string title) {
 
     // set up event codes
     UserEvents::eventCode("WINDOW_FIT_TO_CONTENT");
+    UserEvents::eventCode("COLLISION_EVENT");
 
     components[activeRoom]; // create initial room
 

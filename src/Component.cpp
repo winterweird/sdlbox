@@ -28,6 +28,9 @@ SDL_Rect sdlbox::Component::getRect() const {
     return r;
 }
 
+bool sdlbox::Component::collidable() const {
+    return false; // by default, components are not collidable
+}
 bool sdlbox::Component::collides(Component* other) const {
     SDL_Rect r1 = getRect();
     SDL_Rect r2 = other->getRect();
