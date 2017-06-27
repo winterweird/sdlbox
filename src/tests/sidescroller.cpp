@@ -91,14 +91,12 @@ class Runner : public GameObject {
             }
 
             ComponentFactory cf(this);
-            cf.updatePosition(getHSpeed(), getVSpeed());
-            if (getX() < 0)
-                cf.positionX(0);
-            else if (getX() > 800 - getWidth())
-                cf.positionX(800 - getWidth());
+            cf.updateX(getHSpeed(), 0, 800-getWidth());
+            cf.updateY(getVSpeed(), 0, 250);
             
-            if (getY() > 250) {
-                cf.positionY(250);
+            // TODO: add "oncap" method to updateX and updateY
+            if (getY() == 250) {
+//                cf.positionY(250);
                 grounded = true;
                 vAccel(0);
             }
@@ -180,8 +178,5 @@ int main(int argc, char** argv) {
 
     mainloop(&window);
     
-    // I sorta lost touch with what I was doing...
-    // TODO: figure that out.
-
     return 0;
 }
