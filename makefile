@@ -23,7 +23,7 @@ OBJFILES = $(addprefix $(OBJDIR),$(OBJFILES_NODIR:=.o))
 
 all: $(OUTFILE)
 
-$(OUTFILE): $(OUTSRCFILE) $(LIBDIR)$(SDLBOX_LIB)
+$(OUTFILE): $(OUTSRCFILE) $(LIBDIR)$(SDLBOX_LIB) makefile
 	$(CC) $(CFLAGS) $< $(LIBS) -o $@
 
 $(OBJDIR)%.o: $(SRCDIR)%.cpp $(INCDIR)%.hpp
