@@ -17,8 +17,10 @@ namespace sdlbox {
             ComponentFactory& updatePosition(double dx, double dy);
             ComponentFactory& updateX(double dx);
             ComponentFactory& updateX(double dx, double minValue, double maxValue);
+            ComponentFactory& updateX(double dx, double minValue, double maxValue, std::function<void()> oncap);
             ComponentFactory& updateY(double dy);
             ComponentFactory& updateY(double dy, double minValue, double maxValue);
+            ComponentFactory& updateY(double dy, double minValue, double maxValue, std::function<void()> oncap);
 
             ComponentFactory& lpad(int amount);
             ComponentFactory& rpad(int amount);

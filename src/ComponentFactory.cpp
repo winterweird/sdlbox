@@ -33,7 +33,14 @@ sdlbox::ComponentFactory& sdlbox::ComponentFactory::updateX(double dx) {
 }
 
 sdlbox::ComponentFactory& sdlbox::ComponentFactory::updateX(double dx, double minValue, double maxValue) {
+    return updateX(dx, minValue, maxValue, []{});
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::updateX(double dx, double minValue, double maxValue, std::function<void()> oncap) {
     double change = std::max(minValue - component->x, std::min(dx, maxValue - component->x));
+    if (change != dx) {
+        oncap();
+    }
     return updateX(change);
 }
 
@@ -42,7 +49,14 @@ sdlbox::ComponentFactory& sdlbox::ComponentFactory::updateY(double dy) {
 }
 
 sdlbox::ComponentFactory& sdlbox::ComponentFactory::updateY(double dy, double minValue, double maxValue) {
+    return updateY(dy, minValue, maxValue, []{});
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::updateY(double dy, double minValue, double maxValue, std::function<void()> oncap) {
     double change = std::max(minValue - component->y, std::min(dy, maxValue - component->y));
+    if (change != dy) {
+        oncap();
+    }
     return updateY(change);
 }
 
