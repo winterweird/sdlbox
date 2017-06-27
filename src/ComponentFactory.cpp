@@ -1,5 +1,6 @@
 #include "ComponentFactory.hpp"
 #include <iostream> // testing
+#include <algorithm> // min, max
 
 sdlbox::ComponentFactory::ComponentFactory(Component *c) : component(c) { }
 
@@ -25,6 +26,24 @@ sdlbox::ComponentFactory& sdlbox::ComponentFactory::updatePosition(double dx, do
     component->y += dy;
     component->commit();
     return *this;
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::updateX(double dx) {
+    return updatePosition(dx, 0);
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::updateX(double dx, double minValue, double maxValue) {
+    double change = std::max(minValue - component->x, std::min(dx, maxValue - component->x));
+    return updateX(change);
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::updateY(double dy) {
+    return updatePosition(0, dy);
+}
+
+sdlbox::ComponentFactory& sdlbox::ComponentFactory::updateY(double dy, double minValue, double maxValue) {
+    double change = std::max(minValue - component->y, std::min(dy, maxValue - component->y));
+    return updateY(change);
 }
 
 sdlbox::ComponentFactory& sdlbox::ComponentFactory::positionX(double x, int anchor) {

@@ -11,9 +11,14 @@ namespace sdlbox {
             ComponentFactory& autoposition(bool state=true);
             ComponentFactory& position(double x, double y, int anchor=Layout::TOPLEFT);
             ComponentFactory& position(Component* relative, double x, double y, int anchor=Layout::TOPLEFT);
-            ComponentFactory& updatePosition(double dx, double dy);
             ComponentFactory& positionX(double x, int anchor=Layout::LEFT);
             ComponentFactory& positionY(double y, int anchor=Layout::TOP);
+            
+            ComponentFactory& updatePosition(double dx, double dy);
+            ComponentFactory& updateX(double dx);
+            ComponentFactory& updateX(double dx, double minValue, double maxValue);
+            ComponentFactory& updateY(double dy);
+            ComponentFactory& updateY(double dy, double minValue, double maxValue);
 
             ComponentFactory& lpad(int amount);
             ComponentFactory& rpad(int amount);
