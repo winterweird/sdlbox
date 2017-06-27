@@ -48,7 +48,8 @@ void sdlbox::Panel::draw() const {
 }
 
 void sdlbox::Panel::commit() {
-    repositionChildren();
+    scheduleReposition();
+//    repositionChildren();
 }
 
 void sdlbox::Panel::handle(const SDL_Event &e) {
@@ -62,6 +63,14 @@ void sdlbox::Panel::step() {
     for (auto c : components) {
         c->step();
     }
+
+    if (repositionScheduled) {
+        repositionChildren();
+    }
+}
+
+void sdlbox::Panel::scheduleReposition() {
+    repositionScheduled = true;
 }
 
 void sdlbox::Panel::repositionChildren() {
