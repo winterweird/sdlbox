@@ -16,6 +16,10 @@ class GameObject : public Component {
             GraphicsHelper::drawRect(&r, color);
         }
 
+        bool collidable() const override {
+            return true;
+        }
+
         void vAccel(double goal) {
             vSpeed = goal;
         }
@@ -54,7 +58,14 @@ class GameObject : public Component {
 
 class Runner : public GameObject {
     public:
-        Runner(int x, int y) : GameObject(x, y, Color(0, 255, 0), 0, 0) { }
+        Runner(int x, int y) : GameObject(x, y, Color(0, 255, 0), 0, 0) {
+            addEventListener(UserEvents::existingEventCode("COLLISION_EVENT"),
+                    new EventListener([this](const SDL_Event &e) {
+                        return e.user.data1 == this || e.user.data2 == this;
+                    }, [](const SDL_Event &e) {
+                        SDLBox::getInstance()->goToRoom(Room("GameOverScreen"));
+                    }));
+        }
 
         int getWidth() const override {
             return 20;
@@ -164,12 +175,35 @@ class ObstacleSpawner : public Component {
 int main(int argc, char** argv) {
     SDLBox window("Side scroller - first attempt", 800, 300);
 
+    Rooms::addRoom("GameScreen");
+    Rooms::addRoom("GameOverScreen");
+    
     window.addQuitButton(SDLK_ESCAPE, 0);
 
-    Runner* runner = new Runner(200, 250);
+    window.goToRoom(Room("GameOverScreen"));
+    window.add(ComponentFactory(new Label("GAME OVER"))
+            .position(window.getWidth()/2.0, window.getHeight()/2.0, Layout::CENTER)
+            .create());
+    window.add(ComponentFactory(new Label("(Press space to try again)"))
+            .position(window.getWidth()/2.0, window.getHeight()/2.0 + 30, Layout::CENTER)
+            .create());
 
-    window.add(runner);
-    window.add(new ObstacleSpawner(840, 0));
+    auto newGame = [&](const SDL_Event &e) {
+        window.goToRoom(Room("GameScreen"));
+        window.wipe();
+        
+        Runner* runner = new Runner(200, 250);
+        window.add(runner);
+        
+        window.add(new ObstacleSpawner(840, 0));
+    };
+
+    window.addEventListener(SDL_KEYDOWN,
+            new EventListener([&](const SDL_Event &e){
+                return window.getActiveRoom() == "GameOverScreen" && e.key.keysym.sym == SDLK_SPACE;
+            }, newGame));
+
+    newGame(SDL_Event());
 
     mainloop(&window);
     
